@@ -1,6 +1,5 @@
-package com.mukas.weatherapp.ui.theme
+package com.mukas.weatherapp.presentation.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

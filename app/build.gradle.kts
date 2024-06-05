@@ -20,6 +20,11 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        val key =
+            property("apikey")?.toString() ?: error(
+                "You should add apikey into gradle.properties"
+            )
+        buildConfigField("String", "WEATHER_API_KEY", "\"$key\"")
     }
 
     buildTypes {
@@ -77,7 +82,7 @@ dependencies {
 
     //Room
     implementation(libs.room.core)
-//    ksp(libs.room.compiler)
+    ksp(libs.room.compiler)
 
     //Glide
     implementation(libs.glide.compose)
