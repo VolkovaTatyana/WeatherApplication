@@ -28,6 +28,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField ("String", "BASE_URL", "\"https://api.weatherapi.com/v1/\"")
+            buildConfigField ("String", "KEY_PARAM", "\"key\"")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -95,4 +99,5 @@ dependencies {
     //Koin
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
+    implementation(libs.koin.android)
 }
