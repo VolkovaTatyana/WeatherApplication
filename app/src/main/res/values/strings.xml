@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Weather Application</string>
+    <string name="button_add_favourite">Add favourite</string>
+    <string name="search">Search</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="nothing_was_found_for_your_request">Nothing was found for your request</string>
+    <string name="something_went_wrong">Something went wrong</string>
 </resources>
