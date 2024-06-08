@@ -1,4 +1,4 @@
-package com.mukas.weatherapp.presentation.theme.screen.search
+package com.mukas.weatherapp.presentation.screen.search
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -39,7 +39,7 @@ import com.mukas.weatherapp.domain.entity.City
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchContent(viewModel: SearchViewModel) {
+fun SearchScreen(viewModel: SearchViewModel) {
     val state by viewModel.model.collectAsState()
 
     val focusRequester = remember {

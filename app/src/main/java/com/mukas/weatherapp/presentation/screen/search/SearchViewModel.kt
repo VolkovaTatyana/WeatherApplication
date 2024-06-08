@@ -1,4 +1,4 @@
-package com.mukas.weatherapp.presentation.theme.screen.search
+package com.mukas.weatherapp.presentation.screen.search
 
 import androidx.lifecycle.ViewModel
 import com.mukas.weatherapp.domain.entity.City
