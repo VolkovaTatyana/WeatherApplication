@@ -47,9 +47,10 @@ import com.mukas.weatherapp.presentation.theme.CardGradients
 import com.mukas.weatherapp.presentation.theme.Gradient
 import com.mukas.weatherapp.presentation.theme.Orange
 import com.mukas.weatherapp.presentation.util.tempToFormattedString
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun FavouriteScreen(viewModel: FavouriteViewModel) {
+fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
 
     val state by viewModel.model.collectAsState()
 
@@ -62,7 +63,9 @@ fun FavouriteScreen(viewModel: FavouriteViewModel) {
     ) {
         item(span = { GridItemSpan(2) }) {
             SearchCard(
-                onClick = { viewModel.onClickSearch() }
+                onClick = {
+                    viewModel.onClickSearch()
+                }
             )
         }
         itemsIndexed(

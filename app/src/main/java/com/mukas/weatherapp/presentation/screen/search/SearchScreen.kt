@@ -36,10 +36,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mukas.weatherapp.R
 import com.mukas.weatherapp.domain.entity.City
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchScreen(viewModel: SearchViewModel) {
+fun SearchScreen(viewModel: SearchViewModel = koinViewModel()) {
     val state by viewModel.model.collectAsState()
 
     val focusRequester = remember {

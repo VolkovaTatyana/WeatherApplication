@@ -52,9 +52,10 @@ import com.mukas.weatherapp.presentation.theme.CardGradients
 import com.mukas.weatherapp.presentation.util.formattedFullDate
 import com.mukas.weatherapp.presentation.util.formattedShortDayOfWeek
 import com.mukas.weatherapp.presentation.util.tempToFormattedString
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun DetailsScreen(viewModel: DetailsViewModel) {
+fun DetailsScreen(viewModel: DetailsViewModel = koinViewModel()) {
     val state by viewModel.model.collectAsState()
 
     Scaffold(
