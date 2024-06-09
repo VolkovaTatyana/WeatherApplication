@@ -3,10 +3,14 @@ package com.mukas.weatherapp.presentation.screen.details
 import androidx.lifecycle.ViewModel
 import com.mukas.weatherapp.domain.entity.City
 import com.mukas.weatherapp.domain.entity.Forecast
+import com.mukas.weatherapp.navigation.Router
+import com.mukas.weatherapp.navigation.pop
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class DetailsViewModel : ViewModel() {
+class DetailsViewModel(
+    private val router: Router
+) : ViewModel() {
 
     val model: StateFlow<State> = MutableStateFlow(
         State(
@@ -31,7 +35,9 @@ class DetailsViewModel : ViewModel() {
         }
     }
 
-    fun onClickBack() {}
+    fun onClickBack() {
+        router.pop()
+    }
 
     fun onClickChangeFavouriteStatus() {}
 }

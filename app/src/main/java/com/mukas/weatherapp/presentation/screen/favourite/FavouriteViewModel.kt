@@ -2,10 +2,16 @@ package com.mukas.weatherapp.presentation.screen.favourite
 
 import androidx.lifecycle.ViewModel
 import com.mukas.weatherapp.domain.entity.City
+import com.mukas.weatherapp.navigation.Router
+import com.mukas.weatherapp.navigation.navigate
+import com.mukas.weatherapp.presentation.screen.details.DetailsScreenDestination
+import com.mukas.weatherapp.presentation.screen.search.SearchScreenDestination
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class FavouriteViewModel : ViewModel() {
+class FavouriteViewModel(
+    private val router: Router
+) : ViewModel() {
 
     val model: StateFlow<State> = MutableStateFlow(State(listOf()))
 
@@ -33,9 +39,13 @@ class FavouriteViewModel : ViewModel() {
     }
 
 
-    fun onClickSearch() {}
+    fun onClickSearch() {
+        router.navigate(SearchScreenDestination())
+    }
 
-    fun onClickAddFavourite() {}
+    fun onClickAddFavourite() {
+        router.navigate(DetailsScreenDestination())
+    }
 
     fun onCityItemClick(city: City) {}
 }

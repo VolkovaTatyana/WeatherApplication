@@ -7,13 +7,20 @@ import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.mukas.weatherapp.navigation.Router
 import com.mukas.weatherapp.presentation.screen.details.DetailsScreen
+import com.mukas.weatherapp.presentation.screen.details.DetailsScreenDestination
 import com.mukas.weatherapp.presentation.screen.favourite.FavouriteScreen
+import com.mukas.weatherapp.presentation.screen.favourite.FavouriteScreenDestination
 import com.mukas.weatherapp.presentation.screen.search.SearchScreen
+import com.mukas.weatherapp.presentation.screen.search.SearchScreenDestination
 import com.mukas.weatherapp.presentation.theme.WeatherApplicationTheme
 import kotlinx.serialization.Serializable
+import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
+
+    private val router by inject<Router>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,25 +29,33 @@ class MainActivity : ComponentActivity() {
         setContent {
             WeatherApplicationTheme {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = Favourite) {
-                    composable<Favourite> {
+                router.attach(navController)
+                NavHost(
+                    navController = navController,
+                    startDestination = FavouriteScreenDestination.ROUTE
+                ) {
+                    composable(route = FavouriteScreenDestination.ROUTE) {
                         FavouriteScreen()
                     }
-                    composable<Search> {
+                    composable(route = SearchScreenDestination.ROUTE) {
                         SearchScreen()
                     }
-                    composable<Detail> {
+                    composable(route = DetailsScreenDestination.ROUTE) {
                         DetailsScreen()
                     }
                 }
             }
         }
     }
+
+    override fun onDestroy() {
+        router.detach()
+        super.onDestroy()
+    }
 }
 
 @Serializable
 object Favourite
-
 @Serializable
 object Search
 @Serializable

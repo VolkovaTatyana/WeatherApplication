@@ -2,10 +2,14 @@ package com.mukas.weatherapp.presentation.screen.search
 
 import androidx.lifecycle.ViewModel
 import com.mukas.weatherapp.domain.entity.City
+import com.mukas.weatherapp.navigation.Router
+import com.mukas.weatherapp.navigation.pop
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class SearchViewModel : ViewModel() {
+class SearchViewModel(
+    private val router: Router
+) : ViewModel() {
 
     val model: StateFlow<State> = MutableStateFlow(State("", State.SearchState.Initial))
 
@@ -29,9 +33,13 @@ class SearchViewModel : ViewModel() {
 
     fun changeSearchQuery(query: String) {}
 
-    fun onClickBack() {}
+    fun onClickBack() {
+        router.pop()
+    }
 
     fun onClickSearch() {}
 
-    fun onClickCity(city: City) {}
+    fun onClickCity(city: City) {
+//        router.navigate(DetailsScreenDestination())
+    }
 }
