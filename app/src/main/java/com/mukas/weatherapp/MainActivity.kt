@@ -41,7 +41,8 @@ class MainActivity : ComponentActivity() {
                         SearchScreen()
                     }
                     composable(route = DetailsScreenDestination.ROUTE) {
-                        DetailsScreen()
+                        val cityName = it.arguments?.getString(DetailsScreenDestination.ARG_KEY) ?: "empty"
+                        DetailsScreen(cityName)
                     }
                 }
             }

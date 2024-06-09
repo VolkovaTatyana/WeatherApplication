@@ -1,5 +1,6 @@
 package com.mukas.weatherapp.presentation.screen.details
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
@@ -55,8 +56,12 @@ import com.mukas.weatherapp.presentation.util.tempToFormattedString
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun DetailsScreen(viewModel: DetailsViewModel = koinViewModel()) {
+fun DetailsScreen(
+    cityName: String,
+    viewModel: DetailsViewModel = koinViewModel()
+) {
     val state by viewModel.model.collectAsState()
+    Log.d("DetailsScreen", cityName)
 
     Scaffold(
         containerColor = Color.Transparent,

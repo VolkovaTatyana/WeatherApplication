@@ -44,7 +44,7 @@ class FavouriteViewModel(
     }
 
     fun onClickAddFavourite() {
-        router.navigate(DetailsScreenDestination())
+        router.navigate(DetailsScreenDestination("London"))
     }
 
     fun onCityItemClick(city: City) {}
