@@ -28,7 +28,7 @@ interface Router {
         }
 
         private fun performNavigate(destination: ScreenDestination) {
-            navController?.navigate(route = destination.route, builder = destination.builder)
+            navController?.navigate(route = destination.route)
         }
 
         override fun detach() {
@@ -38,14 +38,11 @@ interface Router {
     }
 
     interface Factory {
-
         companion object {
-
             fun create(): Router {
                 return ComposeRouter()
             }
         }
-
     }
 
 }

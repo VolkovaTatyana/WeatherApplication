@@ -57,11 +57,11 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun DetailsScreen(
-    cityName: String,
+    cityId: Int,
     viewModel: DetailsViewModel = koinViewModel()
 ) {
     val state by viewModel.model.collectAsState()
-    Log.d("DetailsScreen", cityName)
+    Log.d("DetailsScreen", cityId.toString())
 
     Scaffold(
         containerColor = Color.Transparent,
