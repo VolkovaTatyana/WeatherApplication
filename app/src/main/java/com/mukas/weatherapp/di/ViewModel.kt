@@ -14,7 +14,7 @@ val viewModelModule = module {
 
     viewModel { FavouriteViewModel(get()) }
 
-    viewModel { SearchViewModel(get()) }
+    viewModel { SearchViewModel(get(), get()) }
 
     viewModel { DetailsViewModel(get()) }
 }
