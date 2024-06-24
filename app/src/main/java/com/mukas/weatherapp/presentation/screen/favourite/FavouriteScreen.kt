@@ -75,7 +75,7 @@ fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
             CityCard(
                 cityItem = item,
                 index = index,
-                onClick = { viewModel.onCityItemClick(item.city.id) }
+                onClick = { viewModel.onCityItemClick(item.city) }
             )
         }
         item {

@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.mukas.weatherapp.domain.entity.City
 import com.mukas.weatherapp.domain.usecase.SearchCityUseCase
 import com.mukas.weatherapp.navigation.Router
+import com.mukas.weatherapp.navigation.navigate
 import com.mukas.weatherapp.navigation.pop
+import com.mukas.weatherapp.presentation.screen.details.DetailsScreenDestination
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -69,6 +71,6 @@ class SearchViewModel(
     }
 
     fun onClickCity(city: City) {
-//        router.navigate(DetailsScreenDestination())
+        router.navigate(DetailsScreenDestination(cityId = city.id, cityName = city.name))
     }
 }

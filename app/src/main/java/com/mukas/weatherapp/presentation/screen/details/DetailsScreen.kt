@@ -1,6 +1,5 @@
 package com.mukas.weatherapp.presentation.screen.details
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
@@ -53,22 +52,17 @@ import com.mukas.weatherapp.presentation.theme.CardGradients
 import com.mukas.weatherapp.presentation.util.formattedFullDate
 import com.mukas.weatherapp.presentation.util.formattedShortDayOfWeek
 import com.mukas.weatherapp.presentation.util.tempToFormattedString
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun DetailsScreen(
-    cityId: Int,
-    viewModel: DetailsViewModel = koinViewModel()
-) {
+fun DetailsScreen(viewModel: DetailsViewModel) {
     val state by viewModel.model.collectAsState()
-    Log.d("DetailsScreen", cityId.toString())
 
     Scaffold(
         containerColor = Color.Transparent,
         contentColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopBar(
-                cityName = state.city.name,
+                cityName = state.cityName,
                 isCityFavourite = state.isFavourite,
                 onBackClicked = { viewModel.onClickBack() },
                 onClickChangeFavouriteStatus = { viewModel.onClickChangeFavouriteStatus() }

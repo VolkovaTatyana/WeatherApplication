@@ -16,5 +16,5 @@ val viewModelModule = module {
 
     viewModel { SearchViewModel(get(), get()) }
 
-    viewModel { DetailsViewModel(get()) }
+    viewModel { DetailsViewModel(get(), get(), get(), get(), get()) }
 }
