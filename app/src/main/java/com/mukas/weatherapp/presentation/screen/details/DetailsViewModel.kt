@@ -1,9 +1,10 @@
 package com.mukas.weatherapp.presentation.screen.details
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mukas.weatherapp.domain.entity.City
 import com.mukas.weatherapp.domain.entity.Forecast
+import com.mukas.weatherapp.domain.usecase.ChangeFavouriteStateUseCase
 import com.mukas.weatherapp.domain.usecase.GetForecastUseCase
 import com.mukas.weatherapp.domain.usecase.ObserveFavouriteStateUseCase
 import com.mukas.weatherapp.navigation.Router
@@ -19,12 +20,13 @@ class DetailsViewModel(
     cityName: String,
     private val getForecast: GetForecastUseCase,
     private val observeFavouriteState: ObserveFavouriteStateUseCase,
+    private val changeFavouriteState: ChangeFavouriteStateUseCase,
     private val router: Router
 ) : ViewModel() {
 
     private val _model = MutableStateFlow(
         State(
-            cityName = cityName,
+            city = City(id = cityId, name = cityName, country = "test"),
             isFavourite = false,
             forecastState = State.ForecastState.Initial
         )
@@ -32,8 +34,6 @@ class DetailsViewModel(
     val model = _model.asStateFlow()
 
     init {
-        Log.d("DetailsViewModel", "$cityName id=$cityId")
-
         viewModelScope.launch {
             _model.value = _model.value.copy(forecastState = State.ForecastState.Loading)
             withContext(Dispatchers.IO) {
@@ -62,7 +62,7 @@ class DetailsViewModel(
     }
 
     data class State(
-        val cityName: String,
+        val city: City,
         val isFavourite: Boolean,
         val forecastState: ForecastState
     ) {
@@ -80,5 +80,13 @@ class DetailsViewModel(
         router.pop()
     }
 
-    fun onClickChangeFavouriteStatus() {}
+    fun onClickChangeFavouriteStatus() {
+        viewModelScope.launch {
+            if (_model.value.isFavourite) {
+                changeFavouriteState.removeFromFavourite(cityId = _model.value.city.id)
+            } else {
+                changeFavouriteState.addToFavourite(_model.value.city)
+            }
+        }
+    }
 }

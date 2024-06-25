@@ -70,7 +70,7 @@ fun DetailsScreen(
         contentColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopBar(
-                cityName = state.cityName,
+                cityName = state.city.name,
                 isCityFavourite = state.isFavourite,
                 onBackClicked = { viewModel.onClickBack() },
                 onClickChangeFavouriteStatus = { viewModel.onClickChangeFavouriteStatus() }
