@@ -1,19 +1,35 @@
 package com.mukas.weatherapp.presentation.screen.favourite
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mukas.weatherapp.domain.entity.City
+import com.mukas.weatherapp.domain.usecase.GetCurrentWeatherUseCase
+import com.mukas.weatherapp.domain.usecase.GetFavouriteCitiesUseCase
 import com.mukas.weatherapp.navigation.Router
 import com.mukas.weatherapp.navigation.navigate
 import com.mukas.weatherapp.presentation.screen.details.DetailsScreenDestination
 import com.mukas.weatherapp.presentation.screen.search.SearchScreenDestination
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class FavouriteViewModel(
-    private val router: Router
+    private val router: Router,
+    private val getFavouriteCities: GetFavouriteCitiesUseCase,
+    private val getCurrentWeather: GetCurrentWeatherUseCase
 ) : ViewModel() {
 
-    val model: StateFlow<State> = MutableStateFlow(State(listOf()))
+    private val _model = MutableStateFlow(State(listOf()))
+    val model = _model.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            getFavouriteCities()
+                .collect {
+
+                }
+        }
+    }
 
     data class State(
         val cityItems: List<CityItem>

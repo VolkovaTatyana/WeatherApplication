@@ -26,7 +26,7 @@ class DetailsViewModel(
 
     private val _model = MutableStateFlow(
         State(
-            city = City(id = cityId, name = cityName, country = "test"),
+            city = City(id = cityId, name = cityName, country = "test"), //TODO country param
             isFavourite = false,
             forecastState = State.ForecastState.Initial
         )

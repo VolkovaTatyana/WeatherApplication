@@ -12,7 +12,7 @@ val viewModelModule = module {
 
     singleOf(Router.Factory::create)
 
-    viewModel { FavouriteViewModel(get()) }
+    viewModel { FavouriteViewModel(get(), get(), get()) }
 
     viewModel { SearchViewModel(get(), get()) }
 
