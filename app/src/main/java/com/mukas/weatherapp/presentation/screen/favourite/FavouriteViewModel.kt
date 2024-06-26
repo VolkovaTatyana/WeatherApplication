@@ -26,7 +26,13 @@ class FavouriteViewModel(
         viewModelScope.launch {
             getFavouriteCities()
                 .collect {
-
+                    val cities = it.map { city: City -> //TODO
+                        State.CityItem(
+                            city = city,
+                            weatherState = State.WeatherState.Loading
+                        )
+                    }
+                    _model.value = _model.value.copy(cityItems = cities)
                 }
         }
     }
