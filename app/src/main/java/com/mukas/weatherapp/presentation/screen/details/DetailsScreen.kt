@@ -59,9 +59,10 @@ import org.koin.core.parameter.parametersOf
 fun DetailsScreen(
     cityId: Int,
     cityName: String,
+    country: String,
     viewModel: DetailsViewModel = koinViewModel(
         key = cityId.toString(),
-        parameters = { parametersOf(cityId, cityName) })
+        parameters = { parametersOf(cityId, cityName, country) })
 ) {
     val state by viewModel.model.collectAsState()
 

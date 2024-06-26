@@ -71,6 +71,12 @@ class SearchViewModel(
     }
 
     fun onClickCity(city: City) {
-        router.navigate(DetailsScreenDestination(cityId = city.id, cityName = city.name))
+        router.navigate(
+            DetailsScreenDestination(
+                cityId = city.id,
+                cityName = city.name,
+                country = city.country
+            )
+        )
     }
 }

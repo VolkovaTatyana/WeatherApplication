@@ -41,7 +41,11 @@ class MainActivity : ComponentActivity() {
                     }
                     composable<Screen.Details> {
                         val args = it.toRoute<Screen.Details>()
-                        DetailsScreen(cityId = args.cityId, cityName = args.cityName)
+                        DetailsScreen(
+                            cityId = args.cityId,
+                            cityName = args.cityName,
+                            country = args.country
+                        )
                     }
                 }
             }

@@ -16,5 +16,15 @@ val viewModelModule = module {
 
     viewModel { SearchViewModel(get(), get()) }
 
-    viewModel { DetailsViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { parameters ->
+        DetailsViewModel(
+            cityId = parameters.get(),
+            cityName = parameters.get(),
+            country = parameters.get(),
+            getForecast = get(),
+            observeFavouriteState = get(),
+            changeFavouriteState = get(),
+            router = get()
+        )
+    }
 }

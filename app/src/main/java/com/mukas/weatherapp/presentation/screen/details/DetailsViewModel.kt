@@ -18,6 +18,7 @@ import kotlinx.coroutines.withContext
 class DetailsViewModel(
     cityId: Int,
     cityName: String,
+    country: String,
     private val getForecast: GetForecastUseCase,
     private val observeFavouriteState: ObserveFavouriteStateUseCase,
     private val changeFavouriteState: ChangeFavouriteStateUseCase,
@@ -26,7 +27,7 @@ class DetailsViewModel(
 
     private val _model = MutableStateFlow(
         State(
-            city = City(id = cityId, name = cityName, country = "test"), //TODO country param
+            city = City(id = cityId, name = cityName, country = country),
             isFavourite = false,
             forecastState = State.ForecastState.Initial
         )
