@@ -37,7 +37,8 @@ class MainActivity : ComponentActivity() {
                         FavouriteScreen()
                     }
                     composable<Screen.Search> {
-                        SearchScreen()
+                        val args = it.toRoute<Screen.Search>()
+                        SearchScreen(args.isSearchToAddFavourite)
                     }
                     composable<Screen.Details> {
                         val args = it.toRoute<Screen.Details>()

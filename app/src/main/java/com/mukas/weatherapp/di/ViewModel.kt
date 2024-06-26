@@ -12,9 +12,18 @@ val viewModelModule = module {
 
     singleOf(Router.Factory::create)
 
-    viewModel { FavouriteViewModel(get(), get(), get()) }
+    viewModel { FavouriteViewModel(
+        router = get(),
+        getFavouriteCities = get(),
+        getCurrentWeather = get()
+    ) }
 
-    viewModel { SearchViewModel(get(), get()) }
+    viewModel { SearchViewModel(
+        isSearchToAddFavourite = get(),
+        router = get(),
+        searchCity = get(),
+        changeFavouriteState = get()
+    ) }
 
     viewModel { parameters ->
         DetailsViewModel(

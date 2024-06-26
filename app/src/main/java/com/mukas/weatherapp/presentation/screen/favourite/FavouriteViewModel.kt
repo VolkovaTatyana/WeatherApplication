@@ -60,7 +60,7 @@ class FavouriteViewModel(
     }
 
     fun onClickAddFavourite() {
-        router.navigate(SearchScreenDestination())
+        router.navigate(SearchScreenDestination(true))
     }
 
     fun onCityItemClick(city: City) {
@@ -71,5 +71,9 @@ class FavouriteViewModel(
                 country = city.country
             )
         )
+    }
+
+    private suspend fun loadWeatherForCity(city: City) {
+
     }
 }

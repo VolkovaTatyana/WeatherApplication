@@ -3,6 +3,7 @@ package com.mukas.weatherapp.presentation.screen.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mukas.weatherapp.domain.entity.City
+import com.mukas.weatherapp.domain.usecase.ChangeFavouriteStateUseCase
 import com.mukas.weatherapp.domain.usecase.SearchCityUseCase
 import com.mukas.weatherapp.navigation.Router
 import com.mukas.weatherapp.navigation.navigate
@@ -15,8 +16,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SearchViewModel(
+    val isSearchToAddFavourite: Boolean,
     private val router: Router,
-    private val searchCity: SearchCityUseCase
+    private val searchCity: SearchCityUseCase,
+    private val changeFavouriteState: ChangeFavouriteStateUseCase
 ) : ViewModel() {
 
     private val _model = MutableStateFlow(State("", State.SearchState.Initial))
@@ -71,12 +74,19 @@ class SearchViewModel(
     }
 
     fun onClickCity(city: City) {
-        router.navigate(
-            DetailsScreenDestination(
-                cityId = city.id,
-                cityName = city.name,
-                country = city.country
+        if (isSearchToAddFavourite) {
+            viewModelScope.launch {
+                changeFavouriteState.addToFavourite(city)
+            }
+            router.pop()
+        } else {
+            router.navigate(
+                DetailsScreenDestination(
+                    cityId = city.id,
+                    cityName = city.name,
+                    country = city.country
+                )
             )
-        )
+        }
     }
 }

@@ -14,7 +14,7 @@ sealed interface Screen {
     data object Favourite : Screen
 
     @Serializable
-    data object Search : Screen
+    data class Search(val isSearchToAddFavourite: Boolean) : Screen
 
     @Serializable
     data class Details(val cityId: Int, val cityName: String, val country: String) : Screen

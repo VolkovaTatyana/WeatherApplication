@@ -37,10 +37,16 @@ import androidx.compose.ui.unit.dp
 import com.mukas.weatherapp.R
 import com.mukas.weatherapp.domain.entity.City
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchScreen(viewModel: SearchViewModel = koinViewModel()) {
+fun SearchScreen(
+    isSearchToAddFavourite: Boolean,
+    viewModel: SearchViewModel = koinViewModel(
+        key = isSearchToAddFavourite.toString(),
+        parameters = { parametersOf(isSearchToAddFavourite) })
+    ) {
     val state by viewModel.model.collectAsState()
 
     val focusRequester = remember {
