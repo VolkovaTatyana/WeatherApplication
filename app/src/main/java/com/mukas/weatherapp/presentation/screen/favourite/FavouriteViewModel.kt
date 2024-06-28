@@ -26,13 +26,7 @@ class FavouriteViewModel(
         viewModelScope.launch {
             getFavouriteCities()
                 .collect {
-                    val cities = it.map { city: City -> //TODO
-                        State.CityItem(
-                            city = city,
-                            weatherState = State.WeatherState.Loading
-                        )
-                    }
-                    _model.value = _model.value.copy(cityItems = cities)
+                    getStateForCities(it)
                 }
         }
     }
@@ -49,11 +43,12 @@ class FavouriteViewModel(
         sealed interface WeatherState {
             data object Initial : WeatherState
 
-            data object Loading : WeatherState
+            data class Loading(val cityId: Int) : WeatherState
 
-            data object Error : WeatherState
+            data class Error(val cityId: Int) : WeatherState
 
             data class Loaded(
+                val cityId: Int,
                 val tempC: Float,
                 val iconUrl: String
             ) : WeatherState
@@ -79,7 +74,32 @@ class FavouriteViewModel(
         )
     }
 
-    private suspend fun loadWeatherForCity(city: City) {
+    private suspend fun getStateForCities(cityList: List<City>) {
+        val cities = cityList.map { city: City -> //TODO
+            State.CityItem(
+                city = city,
+                weatherState = State.WeatherState.Loading(cityId = city.id)
+            )
+        }
+        _model.value = _model.value.copy(cityItems = cities)
+        cities.map { cityItem ->
+            val weatherState = loadWeatherForCity(cityItem.city)
+            cityItem.copy(weatherState = weatherState)
+        }.apply {
+            _model.value = _model.value.copy(cityItems = this)
+        }
+    }
 
+    private suspend fun loadWeatherForCity(city: City): State.WeatherState {
+        return try {
+            val weather = getCurrentWeather(city.id)
+            State.WeatherState.Loaded(
+                tempC = weather.tempC,
+                iconUrl = weather.conditionUrl,
+                cityId = city.id
+            )
+        } catch (e: Exception) {
+            State.WeatherState.Error(city.id)
+        }
     }
 }

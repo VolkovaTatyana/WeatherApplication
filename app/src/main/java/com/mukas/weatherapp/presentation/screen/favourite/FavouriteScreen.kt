@@ -125,9 +125,14 @@ private fun CityCard(
         ) {
             when (val weatherState = cityItem.weatherState) {
 
-                FavouriteViewModel.State.WeatherState.Error -> {}
-
                 FavouriteViewModel.State.WeatherState.Initial -> {}
+
+                is FavouriteViewModel.State.WeatherState.Loading -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center),
+                        color = MaterialTheme.colorScheme.background
+                    )
+                }
 
                 is FavouriteViewModel.State.WeatherState.Loaded -> {
                     GlideImage(
@@ -147,13 +152,9 @@ private fun CityCard(
                     )
                 }
 
-                FavouriteViewModel.State.WeatherState.Loading -> {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center),
-                        color = MaterialTheme.colorScheme.background
-                    )
-                }
+                is FavouriteViewModel.State.WeatherState.Error -> {}
             }
+
             Text(
                 modifier = Modifier.align(Alignment.BottomStart),
                 text = cityItem.city.name,
