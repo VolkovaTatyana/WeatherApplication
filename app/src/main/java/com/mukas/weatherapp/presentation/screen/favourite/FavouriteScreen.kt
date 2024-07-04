@@ -52,7 +52,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
 
-    val state by viewModel.model.collectAsState()
+    val state by viewModel.state.collectAsState()
 
     LazyVerticalGrid(
         modifier = Modifier.fillMaxSize(),
@@ -89,7 +89,7 @@ fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun CityCard(
-    cityItem: FavouriteViewModel.State.CityItem,
+    cityItem: FavouriteState.CityItem,
     index: Int,
     onClick: () -> Unit
 ) {
@@ -125,16 +125,16 @@ private fun CityCard(
         ) {
             when (val weatherState = cityItem.weatherState) {
 
-                FavouriteViewModel.State.WeatherState.Initial -> {}
+                FavouriteState.WeatherState.Initial -> {}
 
-                is FavouriteViewModel.State.WeatherState.Loading -> {
+                is FavouriteState.WeatherState.Loading -> {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center),
                         color = MaterialTheme.colorScheme.background
                     )
                 }
 
-                is FavouriteViewModel.State.WeatherState.Loaded -> {
+                is FavouriteState.WeatherState.Loaded -> {
                     GlideImage(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
@@ -152,7 +152,7 @@ private fun CityCard(
                     )
                 }
 
-                is FavouriteViewModel.State.WeatherState.Error -> {}
+                is FavouriteState.WeatherState.Error -> {}
             }
 
             Text(

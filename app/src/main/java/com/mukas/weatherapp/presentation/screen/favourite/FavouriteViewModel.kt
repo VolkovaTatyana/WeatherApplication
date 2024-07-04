@@ -19,8 +19,8 @@ class FavouriteViewModel(
     private val getCurrentWeather: GetCurrentWeatherUseCase
 ) : ViewModel() {
 
-    private val _model = MutableStateFlow(State(listOf()))
-    val model = _model.asStateFlow()
+    private val _state = MutableStateFlow(FavouriteState(listOf()))
+    val state = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -30,31 +30,6 @@ class FavouriteViewModel(
                 }
         }
     }
-
-    data class State(
-        val cityItems: List<CityItem>
-    ) {
-
-        data class CityItem(
-            val city: City,
-            val weatherState: WeatherState
-        )
-
-        sealed interface WeatherState {
-            data object Initial : WeatherState
-
-            data class Loading(val cityId: Int) : WeatherState
-
-            data class Error(val cityId: Int) : WeatherState
-
-            data class Loaded(
-                val cityId: Int,
-                val tempC: Float,
-                val iconUrl: String
-            ) : WeatherState
-        }
-    }
-
 
     fun onClickSearch() {
         router.navigate(SearchScreenDestination())
@@ -76,30 +51,30 @@ class FavouriteViewModel(
 
     private suspend fun getStateForCities(cityList: List<City>) {
         val cities = cityList.map { city: City -> //TODO
-            State.CityItem(
+            FavouriteState.CityItem(
                 city = city,
-                weatherState = State.WeatherState.Loading(cityId = city.id)
+                weatherState = FavouriteState.WeatherState.Loading(cityId = city.id)
             )
         }
-        _model.value = _model.value.copy(cityItems = cities)
+        _state.value = _state.value.copy(cityItems = cities)
         cities.map { cityItem ->
             val weatherState = loadWeatherForCity(cityItem.city)
             cityItem.copy(weatherState = weatherState)
         }.apply {
-            _model.value = _model.value.copy(cityItems = this)
+            _state.value = _state.value.copy(cityItems = this)
         }
     }
 
-    private suspend fun loadWeatherForCity(city: City): State.WeatherState {
+    private suspend fun loadWeatherForCity(city: City): FavouriteState.WeatherState {
         return try {
             val weather = getCurrentWeather(city.id)
-            State.WeatherState.Loaded(
+            FavouriteState.WeatherState.Loaded(
                 tempC = weather.tempC,
                 iconUrl = weather.conditionUrl,
                 cityId = city.id
             )
         } catch (e: Exception) {
-            State.WeatherState.Error(city.id)
+            FavouriteState.WeatherState.Error(city.id)
         }
     }
 }

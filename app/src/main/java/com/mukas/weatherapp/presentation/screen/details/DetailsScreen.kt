@@ -64,7 +64,7 @@ fun DetailsScreen(
         key = cityId.toString(),
         parameters = { parametersOf(cityId, cityName, country) })
 ) {
-    val state by viewModel.model.collectAsState()
+    val state by viewModel.state.collectAsState()
 
     Scaffold(
         containerColor = Color.Transparent,
@@ -83,19 +83,19 @@ fun DetailsScreen(
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             when (val forecastState = state.forecastState) {
-                DetailsViewModel.State.ForecastState.Error -> {
+                DetailsState.ForecastState.Error -> {
                     Error()
                 }
 
-                DetailsViewModel.State.ForecastState.Initial -> {
+                DetailsState.ForecastState.Initial -> {
                     Initial()
                 }
 
-                is DetailsViewModel.State.ForecastState.Loaded -> {
+                is DetailsState.ForecastState.Loaded -> {
                     Forecast(forecast = forecastState.forecast)
                 }
 
-                DetailsViewModel.State.ForecastState.Loading -> {
+                DetailsState.ForecastState.Loading -> {
                     Loading()
                 }
             }

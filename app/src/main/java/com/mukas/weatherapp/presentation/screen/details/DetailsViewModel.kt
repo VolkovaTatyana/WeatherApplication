@@ -3,7 +3,6 @@ package com.mukas.weatherapp.presentation.screen.details
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mukas.weatherapp.domain.entity.City
-import com.mukas.weatherapp.domain.entity.Forecast
 import com.mukas.weatherapp.domain.usecase.ChangeFavouriteStateUseCase
 import com.mukas.weatherapp.domain.usecase.GetForecastUseCase
 import com.mukas.weatherapp.domain.usecase.ObserveFavouriteStateUseCase
@@ -25,29 +24,34 @@ class DetailsViewModel(
     private val router: Router
 ) : ViewModel() {
 
-    private val _model = MutableStateFlow(
-        State(
+    private val _state = MutableStateFlow(
+        DetailsState(
             city = City(id = cityId, name = cityName, country = country),
             isFavourite = false,
-            forecastState = State.ForecastState.Initial
+            forecastState = DetailsState.ForecastState.Initial
         )
     )
-    val model = _model.asStateFlow()
+    val state = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
-            _model.value = _model.value.copy(forecastState = State.ForecastState.Loading)
+            _state.value = _state.value.copy(forecastState = DetailsState.ForecastState.Loading)
             withContext(Dispatchers.IO) {
                 try {
                     val forecast = getForecast(cityId)
                     withContext(Dispatchers.Main) {
-                        _model.value =
-                            _model.value.copy(forecastState = State.ForecastState.Loaded(forecast))
+                        _state.value =
+                            _state.value.copy(
+                                forecastState = DetailsState.ForecastState.Loaded(
+                                    forecast
+                                )
+                            )
                     }
 
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
-                        _model.value = _model.value.copy(forecastState = State.ForecastState.Error)
+                        _state.value =
+                            _state.value.copy(forecastState = DetailsState.ForecastState.Error)
                     }
 
                 }
@@ -57,23 +61,8 @@ class DetailsViewModel(
         viewModelScope.launch {
             observeFavouriteState(cityId)
                 .collect {
-                    _model.value = _model.value.copy(isFavourite = it)
+                    _state.value = _state.value.copy(isFavourite = it)
                 }
-        }
-    }
-
-    data class State(
-        val city: City,
-        val isFavourite: Boolean,
-        val forecastState: ForecastState
-    ) {
-        sealed interface ForecastState {
-            data object Initial : ForecastState
-            data object Loading : ForecastState
-
-            data object Error : ForecastState
-
-            data class Loaded(val forecast: Forecast) : ForecastState
         }
     }
 
@@ -83,10 +72,10 @@ class DetailsViewModel(
 
     fun onClickChangeFavouriteStatus() {
         viewModelScope.launch {
-            if (_model.value.isFavourite) {
-                changeFavouriteState.removeFromFavourite(cityId = _model.value.city.id)
+            if (_state.value.isFavourite) {
+                changeFavouriteState.removeFromFavourite(cityId = _state.value.city.id)
             } else {
-                changeFavouriteState.addToFavourite(_model.value.city)
+                changeFavouriteState.addToFavourite(_state.value.city)
             }
         }
     }

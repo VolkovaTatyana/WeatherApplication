@@ -22,29 +22,14 @@ class SearchViewModel(
     private val changeFavouriteState: ChangeFavouriteStateUseCase
 ) : ViewModel() {
 
-    private val _model = MutableStateFlow(State("", State.SearchState.Initial))
-    val model = _model.asStateFlow()
-
-    data class State(
-        val searchQuery: String,
-        val searchState: SearchState
-    ) {
-
-        sealed interface SearchState {
-            data object Initial : SearchState
-
-            data object Loading : SearchState
-
-            data object Error : SearchState
-
-            data object EmptyResult : SearchState
-
-            data class SuccessLoaded(val cities: List<City>) : SearchState
-        }
-    }
+    private val _state = MutableStateFlow(SearchState( //TODO initial state
+        "",
+        SearchState.RequestState.Initial
+    ))
+    val state = _state.asStateFlow()
 
     fun changeSearchQuery(query: String) {
-        _model.value = model.value.copy(searchQuery = query)
+        _state.value = state.value.copy(searchQuery = query)
     }
 
     fun onClickBack() {
@@ -52,22 +37,26 @@ class SearchViewModel(
     }
 
     fun onClickSearch() {
-        val query = _model.value.searchQuery
+        val query = _state.value.searchQuery
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val cities = searchCity(query)
                 withContext(Dispatchers.Main) {
                     if (cities.isEmpty()) {
-                        _model.value =
-                            _model.value.copy(searchState = State.SearchState.EmptyResult)
+                        _state.value =
+                            _state.value.copy(requestState = SearchState.RequestState.EmptyResult)
                     } else {
-                        _model.value =
-                            _model.value.copy(searchState = State.SearchState.SuccessLoaded(cities))
+                        _state.value =
+                            _state.value.copy(
+                                requestState = SearchState.RequestState.SuccessLoaded(
+                                    cities
+                                )
+                            )
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    _model.value = _model.value.copy(searchState = State.SearchState.Error)
+                    _state.value = _state.value.copy(requestState = SearchState.RequestState.Error)
                 }
             }
         }

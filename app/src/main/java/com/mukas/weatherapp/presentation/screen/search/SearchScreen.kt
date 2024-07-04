@@ -46,8 +46,8 @@ fun SearchScreen(
     viewModel: SearchViewModel = koinViewModel(
         key = isSearchToAddFavourite.toString(),
         parameters = { parametersOf(isSearchToAddFavourite) })
-    ) {
-    val state by viewModel.model.collectAsState()
+) {
+    val state by viewModel.state.collectAsState()
 
     val focusRequester = remember {
         FocusRequester()
@@ -82,26 +82,26 @@ fun SearchScreen(
             }
         }
     ) {
-        when (val searchState = state.searchState) {
-            SearchViewModel.State.SearchState.EmptyResult -> {
+        when (val searchState = state.requestState) {
+            SearchState.RequestState.EmptyResult -> {
                 Text(
                     text = stringResource(R.string.nothing_was_found_for_your_request),
                     modifier = Modifier.padding(8.dp)
                 )
             }
 
-            SearchViewModel.State.SearchState.Error -> {
+            SearchState.RequestState.Error -> {
                 Text(
                     text = stringResource(R.string.something_went_wrong),
                     modifier = Modifier.padding(8.dp)
                 )
             }
 
-            SearchViewModel.State.SearchState.Initial -> {
+            SearchState.RequestState.Initial -> {
 
             }
 
-            SearchViewModel.State.SearchState.Loading -> {
+            SearchState.RequestState.Loading -> {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -112,7 +112,7 @@ fun SearchScreen(
                 }
             }
 
-            is SearchViewModel.State.SearchState.SuccessLoaded -> {
+            is SearchState.RequestState.SuccessLoaded -> {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
