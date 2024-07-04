@@ -61,21 +61,29 @@ class DetailsViewModel(
         viewModelScope.launch {
             observeFavouriteState(cityId)
                 .collect {
-                    _state.value = _state.value.copy(isFavourite = it)
+                    act(DetailsAction.FavouriteStateChanged(it))
                 }
         }
     }
 
-    fun onClickBack() {
-        router.pop()
-    }
+    fun act(action: DetailsAction) {
+        when (action) {
+            DetailsAction.ClickBack -> {
+                router.pop()
+            }
 
-    fun onClickChangeFavouriteStatus() {
-        viewModelScope.launch {
-            if (_state.value.isFavourite) {
-                changeFavouriteState.removeFromFavourite(cityId = _state.value.city.id)
-            } else {
-                changeFavouriteState.addToFavourite(_state.value.city)
+            DetailsAction.ClickChangeFavouriteState -> {
+                viewModelScope.launch {
+                    if (_state.value.isFavourite) {
+                        changeFavouriteState.removeFromFavourite(cityId = _state.value.city.id)
+                    } else {
+                        changeFavouriteState.addToFavourite(_state.value.city)
+                    }
+                }
+            }
+
+            is DetailsAction.FavouriteStateChanged -> {
+                _state.value = _state.value.copy(isFavourite = action.isFavourite)
             }
         }
     }

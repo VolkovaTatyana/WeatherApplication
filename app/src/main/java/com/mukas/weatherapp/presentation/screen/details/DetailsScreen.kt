@@ -73,8 +73,12 @@ fun DetailsScreen(
             TopBar(
                 cityName = state.city.name,
                 isCityFavourite = state.isFavourite,
-                onBackClicked = { viewModel.onClickBack() },
-                onClickChangeFavouriteStatus = { viewModel.onClickChangeFavouriteStatus() }
+                onBackClicked = {
+                    viewModel.act(DetailsAction.ClickBack)
+                },
+                onClickChangeFavouriteStatus = {
+                    viewModel.act(DetailsAction.ClickChangeFavouriteState)
+                }
             )
         },
         modifier = Modifier
