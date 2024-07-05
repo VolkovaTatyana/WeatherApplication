@@ -34,35 +34,54 @@ class DetailsViewModel(
     val state = _state.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            _state.value = _state.value.copy(forecastState = DetailsState.ForecastState.Loading)
-            withContext(Dispatchers.IO) {
-                try {
-                    val forecast = getForecast(cityId)
-                    withContext(Dispatchers.Main) {
-                        _state.value =
-                            _state.value.copy(
-                                forecastState = DetailsState.ForecastState.Loaded(
-                                    forecast
-                                )
-                            )
-                    }
-
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        _state.value =
-                            _state.value.copy(forecastState = DetailsState.ForecastState.Error)
-                    }
-
-                }
-            }
-        }
+        changeState(DetailsState.ForecastState.Initial)
 
         viewModelScope.launch {
             observeFavouriteState(cityId)
                 .collect {
                     act(DetailsAction.FavouriteStateChanged(it))
                 }
+        }
+    }
+
+    private fun changeState(forecastState: DetailsState.ForecastState) {
+        when (forecastState) {
+
+            DetailsState.ForecastState.Initial -> {
+                changeState(DetailsState.ForecastState.Loading)
+            }
+
+            DetailsState.ForecastState.Loading -> {
+                _state.value = _state.value.copy(forecastState = DetailsState.ForecastState.Loading)
+
+                viewModelScope.launch {
+                    withContext(Dispatchers.IO) {
+                        try {
+                            val forecast = getForecast(cityId = _state.value.city.id)
+                            withContext(Dispatchers.Main) {
+                                changeState(DetailsState.ForecastState.Loaded(forecast))
+                            }
+
+                        } catch (e: Exception) {
+                            withContext(Dispatchers.Main) {
+                                changeState(DetailsState.ForecastState.Error)
+                            }
+                        }
+                    }
+                }
+            }
+
+            is DetailsState.ForecastState.Loaded -> {
+                _state.value = _state.value.copy(
+                    forecastState = DetailsState.ForecastState.Loaded(
+                        forecastState.forecast
+                    )
+                )
+            }
+
+            DetailsState.ForecastState.Error -> {
+                _state.value = _state.value.copy(forecastState = DetailsState.ForecastState.Error)
+            }
         }
     }
 
