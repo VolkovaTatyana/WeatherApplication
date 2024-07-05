@@ -8,12 +8,12 @@ data class DetailsState(
     val isFavourite: Boolean,
     val forecastState: ForecastState
 ) {
-    sealed interface ForecastState {
-        data object Initial : ForecastState
-        data object Loading : ForecastState
+    sealed class ForecastState {
+        data object Initial : ForecastState()
+        data object Loading : ForecastState()
 
-        data object Error : ForecastState
+        data object Error : ForecastState()
 
-        data class Loaded(val forecast: Forecast) : ForecastState
+        data class Loaded(val forecast: Forecast) : ForecastState()
     }
 }

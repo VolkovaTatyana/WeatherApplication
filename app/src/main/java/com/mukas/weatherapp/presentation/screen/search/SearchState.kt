@@ -7,15 +7,15 @@ data class SearchState(
     val requestState: RequestState
 ) {
 
-    sealed interface RequestState {
-        data object Initial : RequestState
+    sealed class RequestState {
+        data object Initial : RequestState()
 
-        data object Loading : RequestState
+        data object Loading : RequestState()
 
-        data object Error : RequestState
+        data object Error : RequestState()
 
-        data object EmptyResult : RequestState
+        data object EmptyResult : RequestState()
 
-        data class SuccessLoaded(val cities: List<City>) : RequestState
+        data class SuccessLoaded(val cities: List<City>) : RequestState()
     }
 }

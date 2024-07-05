@@ -34,7 +34,7 @@ class DetailsViewModel(
     val state = _state.asStateFlow()
 
     init {
-        changeState(DetailsState.ForecastState.Initial)
+        changeForecastState(DetailsState.ForecastState.Initial)
 
         viewModelScope.launch {
             observeFavouriteState(cityId)
@@ -44,11 +44,11 @@ class DetailsViewModel(
         }
     }
 
-    private fun changeState(forecastState: DetailsState.ForecastState) {
+    private fun changeForecastState(forecastState: DetailsState.ForecastState) {
         when (forecastState) {
 
             DetailsState.ForecastState.Initial -> {
-                changeState(DetailsState.ForecastState.Loading)
+                changeForecastState(DetailsState.ForecastState.Loading)
             }
 
             DetailsState.ForecastState.Loading -> {
@@ -59,12 +59,12 @@ class DetailsViewModel(
                         try {
                             val forecast = getForecast(cityId = _state.value.city.id)
                             withContext(Dispatchers.Main) {
-                                changeState(DetailsState.ForecastState.Loaded(forecast))
+                                changeForecastState(DetailsState.ForecastState.Loaded(forecast))
                             }
 
                         } catch (e: Exception) {
                             withContext(Dispatchers.Main) {
-                                changeState(DetailsState.ForecastState.Error)
+                                changeForecastState(DetailsState.ForecastState.Error)
                             }
                         }
                     }

@@ -26,30 +26,34 @@ class FavouriteViewModel(
         viewModelScope.launch {
             getFavouriteCities()
                 .collect {
-                    getStateForCities(it)
+                    changeStateForCities(it)
                 }
         }
     }
 
-    fun onClickSearch() {
-        router.navigate(SearchScreenDestination())
+    fun act(action: FavouriteAction) {
+        when (action) {
+            is FavouriteAction.CityItemClick -> {
+                router.navigate(
+                    DetailsScreenDestination(
+                        cityId = action.city.id,
+                        cityName = action.city.name,
+                        country = action.city.country
+                    )
+                )
+            }
+
+            FavouriteAction.ClickAddFavourite -> {
+                router.navigate(SearchScreenDestination(true))
+            }
+
+            FavouriteAction.ClickSearch -> {
+                router.navigate(SearchScreenDestination())
+            }
+        }
     }
 
-    fun onClickAddFavourite() {
-        router.navigate(SearchScreenDestination(true))
-    }
-
-    fun onCityItemClick(city: City) {
-        router.navigate(
-            DetailsScreenDestination(
-                cityId = city.id,
-                cityName = city.name,
-                country = city.country
-            )
-        )
-    }
-
-    private suspend fun getStateForCities(cityList: List<City>) {
+    private suspend fun changeStateForCities(cityList: List<City>) {
         val cities = cityList.map { city: City -> //TODO
             FavouriteState.CityItem(
                 city = city,
@@ -62,6 +66,27 @@ class FavouriteViewModel(
             cityItem.copy(weatherState = weatherState)
         }.apply {
             _state.value = _state.value.copy(cityItems = this)
+        }
+    }
+
+    private fun getWeatherState(weatherState: FavouriteState.WeatherState) {
+        when (weatherState) {
+
+            FavouriteState.WeatherState.Initial -> {
+
+            }
+
+            is FavouriteState.WeatherState.Loading -> {
+
+            }
+
+            is FavouriteState.WeatherState.Loaded -> {
+
+            }
+
+            is FavouriteState.WeatherState.Error -> {
+
+            }
         }
     }
 

@@ -11,17 +11,17 @@ data class FavouriteState(
         val weatherState: WeatherState
     )
 
-    sealed interface WeatherState {
-        data object Initial : WeatherState
+    sealed class WeatherState {
+        data object Initial : WeatherState()
 
-        data class Loading(val cityId: Int) : WeatherState
+        data class Loading(val cityId: Int) : WeatherState()
 
-        data class Error(val cityId: Int) : WeatherState
+        data class Error(val cityId: Int) : WeatherState()
 
         data class Loaded(
             val cityId: Int,
             val tempC: Float,
             val iconUrl: String
-        ) : WeatherState
+        ) : WeatherState()
     }
 }

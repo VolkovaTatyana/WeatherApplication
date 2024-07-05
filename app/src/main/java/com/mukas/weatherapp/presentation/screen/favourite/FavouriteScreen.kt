@@ -64,7 +64,7 @@ fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
         item(span = { GridItemSpan(2) }) {
             SearchCard(
                 onClick = {
-                    viewModel.onClickSearch()
+                    viewModel.act(FavouriteAction.ClickSearch)
                 }
             )
         }
@@ -75,12 +75,12 @@ fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
             CityCard(
                 cityItem = item,
                 index = index,
-                onClick = { viewModel.onCityItemClick(item.city) }
+                onClick = { viewModel.act(FavouriteAction.CityItemClick(item.city)) }
             )
         }
         item {
             AddFavouriteCityCard(
-                onClick = { viewModel.onClickAddFavourite() }
+                onClick = { viewModel.act(FavouriteAction.ClickAddFavourite) }
             )
         }
     }
