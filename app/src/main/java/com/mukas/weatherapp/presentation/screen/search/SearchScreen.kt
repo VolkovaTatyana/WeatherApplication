@@ -61,12 +61,12 @@ fun SearchScreen(
         modifier = Modifier.focusRequester(focusRequester),
         query = state.searchQuery,
         placeholder = { Text(text = stringResource(id = R.string.search)) },
-        onQueryChange = { viewModel.changeSearchQuery(it) },
-        onSearch = { viewModel.onClickSearch() },
+        onQueryChange = { viewModel.act(SearchAction.ChangeSearchQuery(it)) },
+        onSearch = { viewModel.act(SearchAction.ClickSearch) },
         active = true,
         onActiveChange = {},
         leadingIcon = {
-            IconButton(onClick = { viewModel.onClickBack() }) {
+            IconButton(onClick = { viewModel.act(SearchAction.ClickBack) }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = null
@@ -74,7 +74,7 @@ fun SearchScreen(
             }
         },
         trailingIcon = {
-            IconButton(onClick = { viewModel.onClickSearch() }) {
+            IconButton(onClick = { viewModel.act(SearchAction.ClickSearch) }) {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = null
@@ -121,10 +121,10 @@ fun SearchScreen(
                     items(
                         items = searchState.cities,
                         key = { it.id }
-                    ) {
+                    ) { city ->
                         CityCard(
-                            city = it,
-                            onCityClick = { viewModel.onClickCity(it) }
+                            city = city,
+                            onCityClick = { viewModel.act(SearchAction.ClickCity(city = city)) }
                         )
                     }
                 }
