@@ -9,10 +9,10 @@ import com.mukas.weatherapp.navigation.navigate
 import com.mukas.weatherapp.navigation.pop
 import com.mukas.weatherapp.presentation.screen.details.DetailsScreenDestination
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class SearchViewModel(
     val isSearchToAddFavourite: Boolean,
@@ -28,6 +28,43 @@ class SearchViewModel(
         )
     )
     val state = _state.asStateFlow()
+
+    private fun changeRequestState(newRequestState: SearchState.RequestState) {
+        _state.value = _state.value.copy(requestState = newRequestState)
+
+        when (newRequestState) {
+
+            SearchState.RequestState.Initial -> {
+                changeRequestState(newRequestState = SearchState.RequestState.Loading)
+            }
+
+            SearchState.RequestState.Loading -> {
+                viewModelScope.launch {
+                    val resultingRequestState = getRequestState()
+                    changeRequestState(resultingRequestState)
+                }
+            }
+
+            else -> { //Do Nothing }
+            }
+        }
+    }
+
+    private suspend fun getRequestState(): SearchState.RequestState {
+        return viewModelScope.async(Dispatchers.IO) {
+            val query = _state.value.searchQuery
+            try {
+                val cities = searchCity(query)
+                if (cities.isEmpty()) {
+                    SearchState.RequestState.EmptyResult
+                } else {
+                    SearchState.RequestState.SuccessLoaded(cities)
+                }
+            } catch (e: Exception) {
+                SearchState.RequestState.Error
+            }
+        }.await()
+    }
 
     fun act(action: SearchAction) {
         when (action) {
@@ -58,77 +95,7 @@ class SearchViewModel(
             }
 
             SearchAction.ClickSearch -> {
-                changeRequestState(newRequestState = SearchState.RequestState.Initial)
-            }
-        }
-    }
-
-    private fun changeRequestState(newRequestState: SearchState.RequestState) {
-        when (newRequestState) {
-
-            SearchState.RequestState.Initial -> {
-                _state.value = _state.value.copy(requestState = newRequestState)
                 changeRequestState(newRequestState = SearchState.RequestState.Loading)
-            }
-
-            SearchState.RequestState.Loading -> {
-                _state.value = _state.value.copy(requestState = newRequestState)
-
-                viewModelScope.launch(Dispatchers.IO) {
-                    val query = _state.value.searchQuery
-                    val resultingRequestState =
-                        try {
-                            val cities = searchCity(query)
-                            if (cities.isEmpty()) {
-                                SearchState.RequestState.EmptyResult
-                            } else {
-                                SearchState.RequestState.SuccessLoaded(cities)
-                            }
-                        } catch (e: Exception) {
-                            SearchState.RequestState.Error
-                        }
-                    withContext(Dispatchers.Main) {
-                        changeRequestState(resultingRequestState)
-                    }
-                }
-            }
-
-            SearchState.RequestState.EmptyResult -> {
-                _state.value = _state.value.copy(requestState = newRequestState)
-            }
-
-            SearchState.RequestState.Error -> {
-                _state.value = _state.value.copy(requestState = newRequestState)
-            }
-
-            is SearchState.RequestState.SuccessLoaded -> {
-                _state.value = _state.value.copy(requestState = newRequestState)
-            }
-        }
-    }
-
-    fun onClickSearch() {
-        val query = _state.value.searchQuery
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val cities = searchCity(query)
-                withContext(Dispatchers.Main) {
-                    if (cities.isEmpty()) {
-                        _state.value =
-                            _state.value.copy(requestState = SearchState.RequestState.EmptyResult)
-                    } else {
-                        _state.value =
-                            _state.value.copy(
-                                requestState = SearchState.RequestState.SuccessLoaded(
-                                    cities
-                                )
-                            )
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    _state.value = _state.value.copy(requestState = SearchState.RequestState.Error)
-                }
             }
         }
     }
