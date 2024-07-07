@@ -11,10 +11,11 @@ import com.mukas.weatherapp.presentation.screen.details.DetailsScreenDestination
 import com.mukas.weatherapp.presentation.screen.search.SearchScreenDestination
 import com.mukas.weatherapp.presentation.util.toCityItemInitial
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FavouriteViewModel(
     private val router: Router,
@@ -30,14 +31,12 @@ class FavouriteViewModel(
             getFavouriteCities()
                 .collect { cities ->
                     val cityItems = cities.map { it.toCityItemInitial() }
-                    changeWeatherState(cityItems)
+                    initLoadingState(cityItems)
                 }
         }
     }
 
-    private suspend fun changeWeatherState(cities: List<FavouriteState.CityItem>) {
-        _state.value = _state.value.copy(cityItems = cities)
-
+    private fun initLoadingState(cities: List<FavouriteState.CityItem>) {
         val loadingCitiesList = cities.map { cityItem ->
             cityItem.copy(
                 weatherState = FavouriteState.WeatherState.Loading(
@@ -45,31 +44,40 @@ class FavouriteViewModel(
                 )
             )
         }
-        _state.value = _state.value.copy(cityItems = loadingCitiesList)
+        _state.update {
+            it.copy(cityItems = loadingCitiesList)
+        }
 
-        val resultList = viewModelScope.async(Dispatchers.IO) {
-            loadingCitiesList.map { cityItem ->
-                val weatherState = viewModelScope.async(Dispatchers.IO) {
-                    loadWeatherForCity(cityItem.city)
-                }.await()
+        fetchWeatherState(loadingCitiesList)
+    }
+
+    private fun fetchWeatherState(cities: List<FavouriteState.CityItem>) {
+        viewModelScope.launch {
+
+            val resultList = cities.map { cityItem ->
+                val weatherState = loadWeatherForCity(cityItem.city)
                 cityItem.copy(weatherState = weatherState)
             }
-        }.await()
-        _state.value = _state.value.copy(cityItems = resultList)
-    }
 
-    private suspend fun loadWeatherForCity(city: City): FavouriteState.WeatherState {
-        return try {
-            val weather = getCurrentWeather(city.id)
-            FavouriteState.WeatherState.Loaded(
-                tempC = weather.tempC,
-                iconUrl = weather.conditionUrl,
-                cityId = city.id
-            )
-        } catch (e: Exception) {
-            FavouriteState.WeatherState.Error(city.id)
+            _state.update {
+                it.copy(cityItems = resultList)
+            }
         }
     }
+
+    private suspend fun loadWeatherForCity(city: City): FavouriteState.WeatherState =
+        withContext(Dispatchers.IO) {
+            try {
+                val weather = getCurrentWeather(city.id)
+                FavouriteState.WeatherState.Loaded(
+                    tempC = weather.tempC,
+                    iconUrl = weather.conditionUrl,
+                    cityId = city.id
+                )
+            } catch (e: Exception) {
+                FavouriteState.WeatherState.Error(city.id)
+            }
+        }
 
     fun act(action: FavouriteAction) {
         when (action) {
