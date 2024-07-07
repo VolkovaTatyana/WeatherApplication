@@ -182,13 +182,12 @@ private fun AddFavouriteCityCard(
                 .sizeIn(minHeight = 196.dp)
                 .fillMaxWidth()
                 .clickable { onClick() }
-                .padding(16.dp)
         ) {
             Icon(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(16.dp)
-                    .size(48.dp),
+                    .padding(top = 32.dp)
+                    .size(64.dp),
                 imageVector = Icons.Default.Edit,
                 tint = Orange,
                 contentDescription = null
@@ -196,8 +195,11 @@ private fun AddFavouriteCityCard(
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = stringResource(R.string.button_add_favourite),
+                color = Orange,
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(bottom = 24.dp)
             )
         }
     }
