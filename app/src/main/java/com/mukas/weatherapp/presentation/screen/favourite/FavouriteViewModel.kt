@@ -35,28 +35,6 @@ class FavouriteViewModel(
         }
     }
 
-    fun act(action: FavouriteAction) {
-        when (action) {
-            is FavouriteAction.CityItemClick -> {
-                router.navigate(
-                    DetailsScreenDestination(
-                        cityId = action.city.id,
-                        cityName = action.city.name,
-                        country = action.city.country
-                    )
-                )
-            }
-
-            FavouriteAction.ClickAddFavourite -> {
-                router.navigate(SearchScreenDestination(true))
-            }
-
-            FavouriteAction.ClickSearch -> {
-                router.navigate(SearchScreenDestination())
-            }
-        }
-    }
-
     private suspend fun changeWeatherState(cities: List<FavouriteState.CityItem>) {
         _state.value = _state.value.copy(cityItems = cities)
 
@@ -90,6 +68,28 @@ class FavouriteViewModel(
             )
         } catch (e: Exception) {
             FavouriteState.WeatherState.Error(city.id)
+        }
+    }
+
+    fun act(action: FavouriteAction) {
+        when (action) {
+            is FavouriteAction.CityItemClick -> {
+                router.navigate(
+                    DetailsScreenDestination(
+                        cityId = action.city.id,
+                        cityName = action.city.name,
+                        country = action.city.country
+                    )
+                )
+            }
+
+            FavouriteAction.ClickAddFavourite -> {
+                router.navigate(SearchScreenDestination(true))
+            }
+
+            FavouriteAction.ClickSearch -> {
+                router.navigate(SearchScreenDestination())
+            }
         }
     }
 }

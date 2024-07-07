@@ -9,10 +9,10 @@ import com.mukas.weatherapp.domain.usecase.ObserveFavouriteStateUseCase
 import com.mukas.weatherapp.navigation.Router
 import com.mukas.weatherapp.navigation.pop
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class DetailsViewModel(
     cityId: Int,
@@ -34,7 +34,7 @@ class DetailsViewModel(
     val state = _state.asStateFlow()
 
     init {
-        changeForecastState(DetailsState.ForecastState.Initial)
+        changeForecastState(DetailsState.ForecastState.Loading)
 
         viewModelScope.launch {
             observeFavouriteState(cityId)
@@ -45,6 +45,8 @@ class DetailsViewModel(
     }
 
     private fun changeForecastState(forecastState: DetailsState.ForecastState) {
+        _state.value = _state.value.copy(forecastState = forecastState)
+
         when (forecastState) {
 
             DetailsState.ForecastState.Initial -> {
@@ -52,37 +54,27 @@ class DetailsViewModel(
             }
 
             DetailsState.ForecastState.Loading -> {
-                _state.value = _state.value.copy(forecastState = DetailsState.ForecastState.Loading)
-
                 viewModelScope.launch {
-                    withContext(Dispatchers.IO) {
-                        try {
-                            val forecast = getForecast(cityId = _state.value.city.id)
-                            withContext(Dispatchers.Main) {
-                                changeForecastState(DetailsState.ForecastState.Loaded(forecast))
-                            }
-
-                        } catch (e: Exception) {
-                            withContext(Dispatchers.Main) {
-                                changeForecastState(DetailsState.ForecastState.Error)
-                            }
-                        }
-                    }
+                    val resultingForecastState = loadForecast()
+                    changeForecastState(resultingForecastState)
                 }
             }
 
-            is DetailsState.ForecastState.Loaded -> {
-                _state.value = _state.value.copy(
-                    forecastState = DetailsState.ForecastState.Loaded(
-                        forecastState.forecast
-                    )
-                )
-            }
-
-            DetailsState.ForecastState.Error -> {
-                _state.value = _state.value.copy(forecastState = DetailsState.ForecastState.Error)
+            else -> {
+                //Do Nothing
             }
         }
+    }
+
+    private suspend fun loadForecast(): DetailsState.ForecastState {
+        return viewModelScope.async(Dispatchers.IO) {
+            try {
+                val forecast = getForecast(cityId = _state.value.city.id)
+                DetailsState.ForecastState.Loaded(forecast)
+            } catch (e: Exception) {
+                DetailsState.ForecastState.Error
+            }
+        }.await()
     }
 
     fun act(action: DetailsAction) {

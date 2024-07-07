@@ -40,17 +40,18 @@ class SearchViewModel(
 
             SearchState.RequestState.Loading -> {
                 viewModelScope.launch {
-                    val resultingRequestState = getRequestState()
+                    val resultingRequestState = loadSearchResult()
                     changeRequestState(resultingRequestState)
                 }
             }
 
-            else -> { //Do Nothing }
+            else -> {
+                //Do Nothing
             }
         }
     }
 
-    private suspend fun getRequestState(): SearchState.RequestState {
+    private suspend fun loadSearchResult(): SearchState.RequestState {
         return viewModelScope.async(Dispatchers.IO) {
             val query = _state.value.searchQuery
             try {
