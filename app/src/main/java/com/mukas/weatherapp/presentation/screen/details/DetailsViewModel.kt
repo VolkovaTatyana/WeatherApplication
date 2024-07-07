@@ -9,10 +9,11 @@ import com.mukas.weatherapp.domain.usecase.ObserveFavouriteStateUseCase
 import com.mukas.weatherapp.navigation.Router
 import com.mukas.weatherapp.navigation.pop
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DetailsViewModel(
     cityId: Int,
@@ -45,7 +46,9 @@ class DetailsViewModel(
     }
 
     private fun changeForecastState(forecastState: DetailsState.ForecastState) {
-        _state.value = _state.value.copy(forecastState = forecastState)
+        _state.update {
+            it.copy(forecastState = forecastState)
+        }
 
         when (forecastState) {
 
@@ -66,15 +69,13 @@ class DetailsViewModel(
         }
     }
 
-    private suspend fun loadForecast(): DetailsState.ForecastState {
-        return viewModelScope.async(Dispatchers.IO) {
-            try {
-                val forecast = getForecast(cityId = _state.value.city.id)
-                DetailsState.ForecastState.Loaded(forecast)
-            } catch (e: Exception) {
-                DetailsState.ForecastState.Error
-            }
-        }.await()
+    private suspend fun loadForecast(): DetailsState.ForecastState = withContext(Dispatchers.IO) {
+        try {
+            val forecast = getForecast(cityId = _state.value.city.id)
+            DetailsState.ForecastState.Loaded(forecast)
+        } catch (e: Exception) {
+            DetailsState.ForecastState.Error
+        }
     }
 
     fun act(action: DetailsAction) {
