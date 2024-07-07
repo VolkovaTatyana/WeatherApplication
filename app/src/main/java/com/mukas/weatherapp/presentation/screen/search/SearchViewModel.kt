@@ -9,10 +9,11 @@ import com.mukas.weatherapp.navigation.navigate
 import com.mukas.weatherapp.navigation.pop
 import com.mukas.weatherapp.presentation.screen.details.DetailsScreenDestination
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SearchViewModel(
     val isSearchToAddFavourite: Boolean,
@@ -30,7 +31,9 @@ class SearchViewModel(
     val state = _state.asStateFlow()
 
     private fun changeRequestState(newRequestState: SearchState.RequestState) {
-        _state.value = _state.value.copy(requestState = newRequestState)
+        _state.update {
+            it.copy(requestState = newRequestState)
+        }
 
         when (newRequestState) {
 
@@ -51,20 +54,18 @@ class SearchViewModel(
         }
     }
 
-    private suspend fun loadSearchResult(): SearchState.RequestState {
-        return viewModelScope.async(Dispatchers.IO) {
-            val query = _state.value.searchQuery
-            try {
-                val cities = searchCity(query)
-                if (cities.isEmpty()) {
-                    SearchState.RequestState.EmptyResult
-                } else {
-                    SearchState.RequestState.SuccessLoaded(cities)
-                }
-            } catch (e: Exception) {
-                SearchState.RequestState.Error
+    private suspend fun loadSearchResult(): SearchState.RequestState = withContext(Dispatchers.IO) {
+        val query = _state.value.searchQuery
+        try {
+            val cities = searchCity(query)
+            if (cities.isEmpty()) {
+                SearchState.RequestState.EmptyResult
+            } else {
+                SearchState.RequestState.SuccessLoaded(cities)
             }
-        }.await()
+        } catch (e: Exception) {
+            SearchState.RequestState.Error
+        }
     }
 
     fun act(action: SearchAction) {
