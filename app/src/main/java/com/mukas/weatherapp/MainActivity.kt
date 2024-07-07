@@ -4,6 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -28,27 +32,34 @@ class MainActivity : ComponentActivity() {
             WeatherApplicationTheme {
                 val navController = rememberNavController()
                 router.attach(navController)
-
-                NavHost(
-                    navController = navController,
-                    startDestination = Screen.Favourite
+                Column(
+                    modifier = Modifier
+                        .statusBarsPadding()
+                        .navigationBarsPadding()
                 ) {
-                    composable<Screen.Favourite> {
-                        FavouriteScreen()
-                    }
-                    composable<Screen.Search> {
-                        val args = it.toRoute<Screen.Search>()
-                        SearchScreen(args.isSearchToAddFavourite)
-                    }
-                    composable<Screen.Details> {
-                        val args = it.toRoute<Screen.Details>()
-                        DetailsScreen(
-                            cityId = args.cityId,
-                            cityName = args.cityName,
-                            country = args.country
-                        )
+
+                    NavHost(
+                        navController = navController,
+                        startDestination = Screen.Favourite
+                    ) {
+                        composable<Screen.Favourite> {
+                            FavouriteScreen()
+                        }
+                        composable<Screen.Search> {
+                            val args = it.toRoute<Screen.Search>()
+                            SearchScreen(args.isSearchToAddFavourite)
+                        }
+                        composable<Screen.Details> {
+                            val args = it.toRoute<Screen.Details>()
+                            DetailsScreen(
+                                cityId = args.cityId,
+                                cityName = args.cityName,
+                                country = args.country
+                            )
+                        }
                     }
                 }
+
             }
         }
     }
