@@ -34,6 +34,8 @@ android {
         }
         release {
             isMinifyEnabled = false
+            buildConfigField ("String", "BASE_URL", "\"https://api.weatherapi.com/v1/\"")
+            buildConfigField ("String", "KEY_PARAM", "\"key\"")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -46,6 +48,12 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs += listOf(
+            "-P",
+            "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=${project.buildDir}/reports/compose",
+            "-P",
+            "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=${project.buildDir}/metrics/compose"
+        )
     }
     buildFeatures {
         compose = true
