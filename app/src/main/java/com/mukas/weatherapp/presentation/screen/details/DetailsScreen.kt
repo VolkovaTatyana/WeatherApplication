@@ -52,6 +52,7 @@ import com.mukas.weatherapp.presentation.theme.CardGradients
 import com.mukas.weatherapp.presentation.util.formattedFullDate
 import com.mukas.weatherapp.presentation.util.formattedShortDayOfWeek
 import com.mukas.weatherapp.presentation.util.tempToFormattedString
+import com.theapache64.rebugger.Rebugger
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -65,6 +66,14 @@ fun DetailsScreen(
         parameters = { parametersOf(cityId, cityName, country) })
 ) {
     val state by viewModel.state.collectAsState()
+
+    Rebugger(
+        trackMap = mapOf(
+            "city" to state.city,
+            "isFavourite" to state.isFavourite,
+            "forecastState" to state.forecastState
+        )
+    )
 
     Scaffold(
         containerColor = Color.Transparent,
@@ -115,6 +124,16 @@ private fun TopBar(
     onBackClicked: () -> Unit,
     onClickChangeFavouriteStatus: () -> Unit
 ) {
+
+    Rebugger(
+        trackMap = mapOf(
+            "cityName" to cityName,
+            "isFavourite" to isCityFavourite,
+            "onBackClicked" to onBackClicked,
+            "onClickChangeFavouriteStatus" to onClickChangeFavouriteStatus
+        )
+    )
+
     CenterAlignedTopAppBar(
         title = { Text(text = cityName) },
         colors = TopAppBarDefaults.topAppBarColors(
@@ -160,6 +179,12 @@ private fun Loading() {
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun Forecast(forecast: Forecast) {
+    Rebugger(
+        trackMap = mapOf(
+            "forecast" to forecast
+        )
+    )
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -195,6 +220,8 @@ private fun Forecast(forecast: Forecast) {
 
 @Composable
 private fun AnimatedUpcomingWeather(upcoming: List<Weather>) {
+    Rebugger(trackMap = mapOf("upcoming" to upcoming))
+
     val state = remember {
         MutableTransitionState(false).apply {
             targetState = true

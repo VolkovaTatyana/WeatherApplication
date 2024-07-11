@@ -10,6 +10,8 @@ import com.mukas.weatherapp.navigation.navigate
 import com.mukas.weatherapp.presentation.screen.details.DetailsScreenDestination
 import com.mukas.weatherapp.presentation.screen.search.SearchScreenDestination
 import com.mukas.weatherapp.presentation.util.toCityItemInitial
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +25,7 @@ class FavouriteViewModel(
     private val getCurrentWeather: GetCurrentWeatherUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(FavouriteState(listOf()))
+    private val _state = MutableStateFlow(FavouriteState(persistentListOf()))
     val state = _state.asStateFlow()
 
     init {
@@ -43,7 +45,7 @@ class FavouriteViewModel(
                     cityId = cityItem.city.id
                 )
             )
-        }
+        }.toImmutableList()
         _state.update {
             it.copy(cityItems = loadingCitiesList)
         }
@@ -57,7 +59,7 @@ class FavouriteViewModel(
             val resultList = cities.map { cityItem ->
                 val weatherState = loadWeatherForCity(cityItem.city)
                 cityItem.copy(weatherState = weatherState)
-            }
+            }.toImmutableList()
 
             _state.update {
                 it.copy(cityItems = resultList)

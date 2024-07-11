@@ -1,9 +1,10 @@
 package com.mukas.weatherapp.presentation.screen.favourite
 
 import com.mukas.weatherapp.domain.entity.City
+import kotlinx.collections.immutable.ImmutableList
 
 data class FavouriteState(
-    val cityItems: List<CityItem>
+    val cityItems: ImmutableList<CityItem>
 ) {
 
     data class CityItem(

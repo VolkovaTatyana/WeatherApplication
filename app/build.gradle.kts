@@ -40,6 +40,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -113,4 +114,6 @@ dependencies {
     //Rebugger
     implementation(libs.rebugger)
 
+    //Immutable Collections
+    implementation(libs.kotlinx.collections.immutable)
 }

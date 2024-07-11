@@ -97,7 +97,7 @@ private fun CityCard(
     index: Int,
     onClick: () -> Unit
 ) {
-    Rebugger(trackMap = mapOf("city" to cityItem, "index" to index))
+    Rebugger(trackMap = mapOf("city" to cityItem, "index" to index, "onClick" to onClick))
 
     val gradient = getGradientByIndex(index)
     Card(
@@ -177,6 +177,8 @@ private fun CityCard(
 private fun AddFavouriteCityCard(
     onClick: () -> Unit
 ) {
+    Rebugger(trackMap = mapOf("onClick" to onClick))
+
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         shape = MaterialTheme.shapes.extraLarge,
