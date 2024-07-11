@@ -67,9 +67,8 @@ fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
     ) {
         item(span = { GridItemSpan(2) }) {
             SearchCard(
-                onClick = {
-                    viewModel.act(FavouriteAction.ClickSearch)
-                }
+                action = FavouriteAction.ClickSearch,
+                onClick = viewModel::act
             )
         }
         itemsIndexed(
@@ -79,12 +78,14 @@ fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
             CityCard(
                 cityItem = item,
                 index = index,
-                onClick = { viewModel.act(FavouriteAction.CityItemClick(item.city)) }
+                action = FavouriteAction.CityItemClick(item.city),
+                onClick = viewModel::act
             )
         }
         item {
             AddFavouriteCityCard(
-                onClick = { viewModel.act(FavouriteAction.ClickAddFavourite) }
+                action = FavouriteAction.ClickAddFavourite,
+                onClick = viewModel::act
             )
         }
     }
@@ -95,9 +96,17 @@ fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
 private fun CityCard(
     cityItem: FavouriteState.CityItem,
     index: Int,
-    onClick: () -> Unit
+    action: FavouriteAction,
+    onClick: (FavouriteAction) -> Unit
 ) {
-    Rebugger(trackMap = mapOf("city" to cityItem, "index" to index, "onClick" to onClick))
+    Rebugger(
+        trackMap = mapOf(
+            "city" to cityItem,
+            "index" to index,
+            "action" to action,
+            "onClick" to onClick
+        )
+    )
 
     val gradient = getGradientByIndex(index)
     Card(
@@ -126,7 +135,7 @@ private fun CityCard(
                         radius = size.maxDimension / 2
                     )
                 }
-                .clickable { onClick() }
+                .clickable { onClick(action) }
                 .padding(24.dp)
         ) {
             when (val weatherState = cityItem.weatherState) {
@@ -175,9 +184,10 @@ private fun CityCard(
 
 @Composable
 private fun AddFavouriteCityCard(
-    onClick: () -> Unit
+    action: FavouriteAction,
+    onClick: (FavouriteAction) -> Unit
 ) {
-    Rebugger(trackMap = mapOf("onClick" to onClick))
+    Rebugger(trackMap = mapOf("action" to action, "onClick" to onClick))
 
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
@@ -188,7 +198,7 @@ private fun AddFavouriteCityCard(
             modifier = Modifier
                 .sizeIn(minHeight = 196.dp)
                 .fillMaxWidth()
-                .clickable { onClick() }
+                .clickable { onClick(action) }
         ) {
             Icon(
                 modifier = Modifier
@@ -214,8 +224,11 @@ private fun AddFavouriteCityCard(
 
 @Composable
 private fun SearchCard(
-    onClick: () -> Unit
+    action: FavouriteAction,
+    onClick: (FavouriteAction) -> Unit
 ) {
+    Rebugger(trackMap = mapOf("action" to action, "onClick" to onClick))
+
     val gradient = CardGradients.gradients[3]
     Card(
         shape = CircleShape
@@ -223,7 +236,7 @@ private fun SearchCard(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .clickable { onClick() }
+                .clickable { onClick(action) }
                 .fillMaxWidth()
                 .background(gradient.primaryGradient)
         ) {
