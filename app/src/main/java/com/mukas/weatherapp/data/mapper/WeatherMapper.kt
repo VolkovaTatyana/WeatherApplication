@@ -6,6 +6,7 @@ import com.mukas.weatherapp.data.network.dto.WeatherDto
 import com.mukas.weatherapp.data.network.dto.WeatherForecastDto
 import com.mukas.weatherapp.domain.entity.Forecast
 import com.mukas.weatherapp.domain.entity.Weather
+import kotlinx.collections.immutable.toPersistentList
 import java.util.Calendar
 import java.util.Date
 
@@ -28,7 +29,7 @@ fun WeatherForecastDto.toEntity(): Forecast = Forecast(
             conditionUrl = dayWeatherDto.conditionDto.iconUrl.correctImageUrl(),
             date = dayDto.date.toCalendar()
         )
-    }
+    }.toPersistentList()
 )
 
 private fun Long.toCalendar() = Calendar.getInstance().apply {

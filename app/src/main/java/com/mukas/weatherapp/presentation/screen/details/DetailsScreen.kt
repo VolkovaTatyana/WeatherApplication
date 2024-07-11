@@ -82,12 +82,7 @@ fun DetailsScreen(
             TopBar(
                 cityName = state.city.name,
                 isCityFavourite = state.isFavourite,
-                onBackClicked = {
-                    viewModel.act(DetailsAction.ClickBack)
-                },
-                onClickChangeFavouriteStatus = {
-                    viewModel.act(DetailsAction.ClickChangeFavouriteState)
-                }
+                onClick = viewModel::act
             )
         },
         modifier = Modifier
@@ -121,16 +116,14 @@ fun DetailsScreen(
 private fun TopBar(
     cityName: String,
     isCityFavourite: Boolean,
-    onBackClicked: () -> Unit,
-    onClickChangeFavouriteStatus: () -> Unit
+    onClick: (DetailsAction) -> Unit
 ) {
 
     Rebugger(
         trackMap = mapOf(
             "cityName" to cityName,
             "isFavourite" to isCityFavourite,
-            "onBackClicked" to onBackClicked,
-            "onClickChangeFavouriteStatus" to onClickChangeFavouriteStatus
+            "onClick" to onClick
         )
     )
 
@@ -141,7 +134,7 @@ private fun TopBar(
             titleContentColor = MaterialTheme.colorScheme.background
         ),
         navigationIcon = {
-            IconButton(onClick = { onBackClicked() }) {
+            IconButton(onClick = { onClick(DetailsAction.ClickBack) }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = null,
@@ -150,7 +143,7 @@ private fun TopBar(
             }
         },
         actions = {
-            IconButton(onClick = { onClickChangeFavouriteStatus() }) {
+            IconButton(onClick = { onClick(DetailsAction.ClickChangeFavouriteState) }) {
                 val icon = if (isCityFavourite) {
                     Icons.Default.Star
                 } else {
