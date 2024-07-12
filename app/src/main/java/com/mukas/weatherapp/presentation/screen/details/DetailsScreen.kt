@@ -51,6 +51,7 @@ import com.mukas.weatherapp.domain.entity.Weather
 import com.mukas.weatherapp.presentation.theme.CardGradients
 import com.mukas.weatherapp.presentation.util.formattedFullDate
 import com.mukas.weatherapp.presentation.util.formattedShortDayOfWeek
+import com.mukas.weatherapp.presentation.util.recomposeHighlighter
 import com.mukas.weatherapp.presentation.util.tempToFormattedString
 import com.theapache64.rebugger.Rebugger
 import org.koin.androidx.compose.koinViewModel
@@ -86,10 +87,13 @@ fun DetailsScreen(
             )
         },
         modifier = Modifier
+            .recomposeHighlighter()
             .fillMaxSize()
             .background(CardGradients.gradients[1].primaryGradient)
     ) { paddingValues ->
-        Box(modifier = Modifier.padding(paddingValues)) {
+        Box(modifier = Modifier
+            .recomposeHighlighter()
+            .padding(paddingValues)) {
             when (val forecastState = state.forecastState) {
                 DetailsState.ForecastState.Error -> {
                     Error()
@@ -161,9 +165,13 @@ private fun TopBar(
 
 @Composable
 private fun Loading() {
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier
+        .recomposeHighlighter()
+        .fillMaxSize()) {
         CircularProgressIndicator(
-            modifier = Modifier.align(Alignment.Center),
+            modifier = Modifier
+                .recomposeHighlighter()
+                .align(Alignment.Center),
             color = MaterialTheme.colorScheme.background
         )
     }
@@ -179,10 +187,14 @@ private fun Forecast(forecast: Forecast) {
     )
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .recomposeHighlighter()
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier
+            .recomposeHighlighter()
+            .weight(1f))
         Text(
             text = forecast.currentWeather.conditionText,
             style = MaterialTheme.typography.titleLarge
@@ -196,7 +208,9 @@ private fun Forecast(forecast: Forecast) {
                 style = MaterialTheme.typography.headlineLarge.copy(fontSize = 70.sp)
             )
             GlideImage(
-                modifier = Modifier.size(70.dp),
+                modifier = Modifier
+                    .recomposeHighlighter()
+                    .size(70.dp),
                 model = forecast.currentWeather.conditionUrl,
                 contentDescription = null
             )
@@ -205,9 +219,13 @@ private fun Forecast(forecast: Forecast) {
             text = forecast.currentWeather.date.formattedFullDate(),
             style = MaterialTheme.typography.titleLarge
         )
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier
+            .recomposeHighlighter()
+            .weight(1f))
         AnimatedUpcomingWeather(upcoming = forecast.upcoming)
-        Spacer(modifier = Modifier.weight(0.5f))
+        Spacer(modifier = Modifier
+            .recomposeHighlighter()
+            .weight(0.5f))
     }
 }
 
@@ -234,6 +252,7 @@ private fun AnimatedUpcomingWeather(upcoming: List<Weather>) {
 private fun UpcomingWeather(upcoming: List<Weather>) {
     Card(
         modifier = Modifier
+            .recomposeHighlighter()
             .fillMaxWidth()
             .padding(24.dp),
         shape = MaterialTheme.shapes.extraLarge,
@@ -245,6 +264,7 @@ private fun UpcomingWeather(upcoming: List<Weather>) {
     ) {
         Column(
             modifier = Modifier
+                .recomposeHighlighter()
                 .fillMaxWidth()
                 .padding(24.dp)
         ) {
@@ -252,11 +272,14 @@ private fun UpcomingWeather(upcoming: List<Weather>) {
                 text = stringResource(R.string.upcoming),
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier
+                    .recomposeHighlighter()
                     .padding(bottom = 24.dp)
                     .align(Alignment.CenterHorizontally)
             )
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .recomposeHighlighter()
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 upcoming.forEach {
@@ -275,11 +298,13 @@ private fun RowScope.SmallWeatherCard(weather: Weather) {
             containerColor = MaterialTheme.colorScheme.background
         ),
         modifier = Modifier
+            .recomposeHighlighter()
             .height(128.dp)
             .weight(1f)
     ) {
         Column(
             modifier = Modifier
+                .recomposeHighlighter()
                 .fillMaxSize()
                 .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -287,7 +312,9 @@ private fun RowScope.SmallWeatherCard(weather: Weather) {
         ) {
             Text(text = weather.tempC.tempToFormattedString())
             GlideImage(
-                modifier = Modifier.size(48.dp),
+                modifier = Modifier
+                    .recomposeHighlighter()
+                    .size(48.dp),
                 model = weather.conditionUrl,
                 contentDescription = null
             )

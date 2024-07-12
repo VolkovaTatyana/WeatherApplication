@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mukas.weatherapp.R
 import com.mukas.weatherapp.domain.entity.City
+import com.mukas.weatherapp.presentation.util.recomposeHighlighter
 import com.theapache64.rebugger.Rebugger
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -67,7 +68,9 @@ fun SearchScreen(
     }
 
     SearchBar(
-        modifier = Modifier.focusRequester(focusRequester),
+        modifier = Modifier
+            .recomposeHighlighter()
+            .focusRequester(focusRequester),
         query = state.searchQuery,
         placeholder = { Text(text = stringResource(id = R.string.search)) },
         onQueryChange = { viewModel.act(SearchAction.ChangeSearchQuery(it)) },
@@ -95,14 +98,18 @@ fun SearchScreen(
             SearchState.RequestState.EmptyResult -> {
                 Text(
                     text = stringResource(R.string.nothing_was_found_for_your_request),
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier
+                        .recomposeHighlighter()
+                        .padding(8.dp)
                 )
             }
 
             SearchState.RequestState.Error -> {
                 Text(
                     text = stringResource(R.string.something_went_wrong),
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier
+                        .recomposeHighlighter()
+                        .padding(8.dp)
                 )
             }
 
@@ -112,7 +119,9 @@ fun SearchScreen(
 
             SearchState.RequestState.Loading -> {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .recomposeHighlighter()
+                        .fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator(
@@ -123,7 +132,9 @@ fun SearchScreen(
 
             is SearchState.RequestState.SuccessLoaded -> {
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .recomposeHighlighter()
+                        .fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(16.dp)
                 ) {
@@ -155,10 +166,13 @@ private fun CityCard(
     )
 
     Card(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .recomposeHighlighter()
+            .fillMaxSize()
     ) {
         Column(
             modifier = Modifier
+                .recomposeHighlighter()
                 .fillMaxWidth()
                 .clickable { onCityClick(SearchAction.ClickCity(city)) }
                 .padding(
@@ -170,7 +184,11 @@ private fun CityCard(
                 text = city.name,
                 style = MaterialTheme.typography.titleMedium
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(
+                modifier = Modifier
+                    .recomposeHighlighter()
+                    .height(8.dp)
+            )
             Text(text = city.country)
         }
     }
