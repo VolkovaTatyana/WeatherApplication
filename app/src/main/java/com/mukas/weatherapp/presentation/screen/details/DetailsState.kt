@@ -14,6 +14,6 @@ data class DetailsState(
 
         data object Error : ForecastState()
 
-        data class Loaded(val forecast: Forecast) : ForecastState()
+        data class Loaded(val forecast: ForecastUi) : ForecastState()
     }
 }

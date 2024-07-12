@@ -8,6 +8,7 @@ import com.mukas.weatherapp.domain.usecase.GetForecastUseCase
 import com.mukas.weatherapp.domain.usecase.ObserveFavouriteStateUseCase
 import com.mukas.weatherapp.navigation.Router
 import com.mukas.weatherapp.navigation.pop
+import com.mukas.weatherapp.presentation.util.toForecastUi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -71,7 +72,7 @@ class DetailsViewModel(
 
     private suspend fun loadForecast(): DetailsState.ForecastState = withContext(Dispatchers.IO) {
         try {
-            val forecast = getForecast(cityId = _state.value.city.id)
+            val forecast = getForecast(cityId = _state.value.city.id).toForecastUi()
             DetailsState.ForecastState.Loaded(forecast)
         } catch (e: Exception) {
             DetailsState.ForecastState.Error

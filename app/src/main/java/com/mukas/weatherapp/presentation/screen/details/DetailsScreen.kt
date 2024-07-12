@@ -46,11 +46,7 @@ import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.mukas.weatherapp.R
-import com.mukas.weatherapp.domain.entity.Forecast
-import com.mukas.weatherapp.domain.entity.Weather
 import com.mukas.weatherapp.presentation.theme.CardGradients
-import com.mukas.weatherapp.presentation.util.formattedFullDate
-import com.mukas.weatherapp.presentation.util.formattedShortDayOfWeek
 import com.mukas.weatherapp.presentation.util.recomposeHighlighter
 import com.mukas.weatherapp.presentation.util.tempToFormattedString
 import com.theapache64.rebugger.Rebugger
@@ -91,9 +87,11 @@ fun DetailsScreen(
             .fillMaxSize()
             .background(CardGradients.gradients[1].primaryGradient)
     ) { paddingValues ->
-        Box(modifier = Modifier
-            .recomposeHighlighter()
-            .padding(paddingValues)) {
+        Box(
+            modifier = Modifier
+                .recomposeHighlighter()
+                .padding(paddingValues)
+        ) {
             when (val forecastState = state.forecastState) {
                 DetailsState.ForecastState.Error -> {
                     Error()
@@ -165,9 +163,11 @@ private fun TopBar(
 
 @Composable
 private fun Loading() {
-    Box(modifier = Modifier
-        .recomposeHighlighter()
-        .fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .recomposeHighlighter()
+            .fillMaxSize()
+    ) {
         CircularProgressIndicator(
             modifier = Modifier
                 .recomposeHighlighter()
@@ -179,7 +179,7 @@ private fun Loading() {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-private fun Forecast(forecast: Forecast) {
+private fun Forecast(forecast: ForecastUi) {
     Rebugger(
         trackMap = mapOf(
             "forecast" to forecast
@@ -192,9 +192,11 @@ private fun Forecast(forecast: Forecast) {
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier
-            .recomposeHighlighter()
-            .weight(1f))
+        Spacer(
+            modifier = Modifier
+                .recomposeHighlighter()
+                .weight(1f)
+        )
         Text(
             text = forecast.currentWeather.conditionText,
             style = MaterialTheme.typography.titleLarge
@@ -216,21 +218,25 @@ private fun Forecast(forecast: Forecast) {
             )
         }
         Text(
-            text = forecast.currentWeather.date.formattedFullDate(),
+            text = forecast.currentWeather.formattedFullDate,
             style = MaterialTheme.typography.titleLarge
         )
-        Spacer(modifier = Modifier
-            .recomposeHighlighter()
-            .weight(1f))
+        Spacer(
+            modifier = Modifier
+                .recomposeHighlighter()
+                .weight(1f)
+        )
         AnimatedUpcomingWeather(upcoming = forecast.upcoming)
-        Spacer(modifier = Modifier
-            .recomposeHighlighter()
-            .weight(0.5f))
+        Spacer(
+            modifier = Modifier
+                .recomposeHighlighter()
+                .weight(0.5f)
+        )
     }
 }
 
 @Composable
-private fun AnimatedUpcomingWeather(upcoming: List<Weather>) {
+private fun AnimatedUpcomingWeather(upcoming: List<WeatherUi>) {
     Rebugger(trackMap = mapOf("upcoming" to upcoming))
 
     val state = remember {
@@ -249,7 +255,7 @@ private fun AnimatedUpcomingWeather(upcoming: List<Weather>) {
 }
 
 @Composable
-private fun UpcomingWeather(upcoming: List<Weather>) {
+private fun UpcomingWeather(upcoming: List<WeatherUi>) {
     Card(
         modifier = Modifier
             .recomposeHighlighter()
@@ -292,7 +298,7 @@ private fun UpcomingWeather(upcoming: List<Weather>) {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-private fun RowScope.SmallWeatherCard(weather: Weather) {
+private fun RowScope.SmallWeatherCard(weather: WeatherUi) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background
@@ -318,7 +324,7 @@ private fun RowScope.SmallWeatherCard(weather: Weather) {
                 model = weather.conditionUrl,
                 contentDescription = null
             )
-            Text(text = weather.date.formattedShortDayOfWeek())
+            Text(text = weather.formattedShortDayOfWeek)
         }
     }
 }
