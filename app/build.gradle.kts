@@ -1,9 +1,14 @@
+import dev.shreyaspatil.composeCompilerMetricsGenerator.core.ComposeCompilerMetricsProvider
+import dev.shreyaspatil.composeCompilerMetricsGenerator.core.ComposeCompilerRawReportProvider
+import dev.shreyaspatil.composeCompilerMetricsGenerator.generator.HtmlReportGenerator
+import dev.shreyaspatil.composeCompilerMetricsGenerator.generator.ReportOptions
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.compose.report.generator)
+    alias(libs.plugins.compose.report.generator) apply false
 }
 
 android {
@@ -30,13 +35,13 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField ("String", "BASE_URL", "\"https://api.weatherapi.com/v1/\"")
-            buildConfigField ("String", "KEY_PARAM", "\"key\"")
+            buildConfigField("String", "BASE_URL", "\"https://api.weatherapi.com/v1/\"")
+            buildConfigField("String", "KEY_PARAM", "\"key\"")
         }
         release {
             isMinifyEnabled = false
-            buildConfigField ("String", "BASE_URL", "\"https://api.weatherapi.com/v1/\"")
-            buildConfigField ("String", "KEY_PARAM", "\"key\"")
+            buildConfigField("String", "BASE_URL", "\"https://api.weatherapi.com/v1/\"")
+            buildConfigField("String", "KEY_PARAM", "\"key\"")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -121,4 +126,34 @@ dependencies {
     val version = "1.3.1"
     implementation("dev.shreyaspatil.compose-compiler-report-generator:core:$version")
     implementation("dev.shreyaspatil.compose-compiler-report-generator:report-generator:$version")
+}
+
+tasks.register("generateComposeCompilerReport") {
+    doLast {
+        // Создание спецификации отчета с названием приложения
+        val reportSpec = dev.shreyaspatil.composeCompilerMetricsGenerator.generator.ReportSpec(
+            name = "WeatherApp",
+            options = ReportOptions() // Настройте по необходимости
+        )
+
+        // Получение поставщика для сырых отчетов (генерируемых компилятором Compose)
+        val rawReportProvider = ComposeCompilerRawReportProvider.FromDirectory(
+            File("${project.buildDir}/reports/compose")
+        )
+
+        // Предоставление метрик генератору
+        val htmlGenerator = HtmlReportGenerator(
+            reportSpec = reportSpec,
+            metricsProvider = ComposeCompilerMetricsProvider(rawReportProvider)
+        )
+
+        // Генерация HTML (строка)
+        val html = htmlGenerator.generateHtml()
+
+        // Сохранение HTML отчета в файл
+        val reportFile = File("${project.buildDir}/reports/compose/report.html")
+        reportFile.writeText(html)
+
+        println("Compose Compiler Report generated at: ${reportFile.absolutePath}")
+    }
 }
