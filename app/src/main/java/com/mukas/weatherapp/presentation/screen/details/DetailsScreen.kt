@@ -64,14 +64,6 @@ fun DetailsScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-    Rebugger(
-        trackMap = mapOf(
-            "city" to state.city,
-            "isFavourite" to state.isFavourite,
-            "forecastState" to state.forecastState
-        )
-    )
-
     Scaffold(
         containerColor = Color.Transparent,
         contentColor = MaterialTheme.colorScheme.background,

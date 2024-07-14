@@ -240,9 +240,9 @@ private fun AddFavouriteCityCard(
 private fun SearchCard(
     onClickSearch: (FavouriteAction) -> Unit
 ) {
-    Rebugger(trackMap = mapOf("onClickSearch" to onClickSearch))
-
     val gradient = CardGradients.gradients[3]
+
+    Rebugger(trackMap = mapOf("onClickSearch" to onClickSearch, "gradient" to gradient))
     Card(
         shape = CircleShape
     ) {
