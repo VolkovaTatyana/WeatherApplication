@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.compose.report.generator)
 }
 
 android {
@@ -116,4 +117,8 @@ dependencies {
 
     //Immutable Collections
     implementation(libs.kotlinx.collections.immutable)
+
+    val version = "1.3.1"
+    implementation("dev.shreyaspatil.compose-compiler-report-generator:core:$version")
+    implementation("dev.shreyaspatil.compose-compiler-report-generator:report-generator:$version")
 }
