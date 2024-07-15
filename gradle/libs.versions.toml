@@ -58,6 +58,6 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = {id = "com.google.devtools.ksp", version.ref = "ksp"}
-compose-report-generator = { id = "dev.shreyaspatil.compose-compiler-report-generator", version.ref = "composeReportGenerator" }
+compose-compiler-report-generator = { id = "dev.shreyaspatil.compose-compiler-report-generator", version.ref = "composeReportGenerator" }
 
 
