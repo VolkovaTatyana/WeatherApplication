@@ -1,10 +1,12 @@
 package com.mukas.weatherapp.presentation.screen.favourite
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -47,9 +49,7 @@ import com.mukas.weatherapp.R
 import com.mukas.weatherapp.presentation.theme.CardGradients
 import com.mukas.weatherapp.presentation.theme.Gradient
 import com.mukas.weatherapp.presentation.theme.Orange
-import com.mukas.weatherapp.presentation.util.recomposeHighlighter
 import com.mukas.weatherapp.presentation.util.tempToFormattedString
-import com.theapache64.rebugger.Rebugger
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -57,12 +57,14 @@ fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
 
     val state by viewModel.state.collectAsState()
 
-    Rebugger(trackMap = mapOf("cities" to state.cityItems))
+//    Rebugger(trackMap = mapOf("cities" to state.cityItems))
+    Log.d(
+        "Rebugger",
+        "FavouriteScreen recomposed"
+    )
 
     LazyVerticalGrid(
-        modifier = Modifier
-            .recomposeHighlighter()
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp),
@@ -91,7 +93,6 @@ fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun CityCard(
     cityItem: FavouriteState.CityItem,
@@ -100,18 +101,22 @@ private fun CityCard(
 ) {
     val gradient = getGradientByIndex(index)
 
-    Rebugger(
-        trackMap = mapOf(
-            "city" to cityItem,
-            "index" to index,
-            "onClickCityItem" to onClickCityItem,
-            "gradient" to gradient
-        )
+    Log.d(
+        "Rebugger",
+        "CityCard recomposed: cityItem=$cityItem, index=$index, onClickCityItem=$onClickCityItem"
     )
+//
+//    Rebugger(
+//        trackMap = mapOf(
+//            "city" to cityItem,
+//            "index" to index,
+//            "onClickCityItem" to onClickCityItem,
+//            "weatherState" to cityItem.weatherState
+//        )
+//    )
 
     Card(
         modifier = Modifier
-            .recomposeHighlighter()
             .fillMaxSize()
             .shadow(
                 elevation = 16.dp,
@@ -123,7 +128,6 @@ private fun CityCard(
     ) {
         Box(
             modifier = Modifier
-                .recomposeHighlighter()
                 .background(gradient.primaryGradient)
                 .fillMaxSize()
                 .sizeIn(minHeight = 196.dp)
@@ -146,30 +150,15 @@ private fun CityCard(
 
                 is FavouriteState.WeatherState.Loading -> {
                     CircularProgressIndicator(
-                        modifier = Modifier
-                            .recomposeHighlighter()
-                            .align(Alignment.Center),
+                        modifier = Modifier.align(Alignment.Center),
                         color = MaterialTheme.colorScheme.background
                     )
                 }
 
                 is FavouriteState.WeatherState.Loaded -> {
-                    GlideImage(
-                        modifier = Modifier
-                            .recomposeHighlighter()
-                            .align(Alignment.TopEnd)
-                            .size(56.dp),
-                        model = weatherState.iconUrl,
-                        contentDescription = null
-                    )
-                    Text(
-                        modifier = Modifier
-                            .recomposeHighlighter()
-                            .align(Alignment.BottomStart)
-                            .padding(bottom = 24.dp),
-                        text = weatherState.tempC.tempToFormattedString(),
-                        color = MaterialTheme.colorScheme.background,
-                        style = MaterialTheme.typography.bodyLarge.copy(fontSize = 48.sp)
+                    LoadedWeatherState(
+                        iconUrl = weatherState.iconUrl,
+                        tempC = weatherState.tempC.tempToFormattedString()
                     )
                 }
 
@@ -177,9 +166,7 @@ private fun CityCard(
             }
 
             Text(
-                modifier = Modifier
-                    .recomposeHighlighter()
-                    .align(Alignment.BottomStart),
+                modifier = Modifier.align(Alignment.BottomStart),
                 text = cityItem.city.name,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -190,12 +177,44 @@ private fun CityCard(
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+private fun BoxScope.LoadedWeatherState(
+    iconUrl: String,
+    tempC: String
+) {
+//    Rebugger(trackMap = emptyMap())
+    Log.d(
+        "Rebugger",
+        "LoadedWeatherState recomposed"
+    )
+
+    GlideImage(
+        modifier = Modifier
+            .align(Alignment.TopEnd)
+            .size(56.dp),
+        model = iconUrl,
+        contentDescription = null
+    )
+    Text(
+        modifier = Modifier
+            .align(Alignment.BottomStart)
+            .padding(bottom = 24.dp),
+        text = tempC,
+        color = MaterialTheme.colorScheme.background,
+        style = MaterialTheme.typography.bodyLarge.copy(fontSize = 48.sp)
+    )
+}
+
 @Composable
 private fun AddFavouriteCityCard(
     onClickAddFavourite: (FavouriteAction) -> Unit
 ) {
-    Rebugger(trackMap = mapOf("onClickAddFavourite" to onClickAddFavourite))
-
+//    Rebugger(trackMap = mapOf("onClickAddFavourite" to onClickAddFavourite))
+    Log.d(
+        "Rebugger",
+        "AddFavouriteCityCard recomposed"
+    )
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         shape = MaterialTheme.shapes.extraLarge,
@@ -203,14 +222,12 @@ private fun AddFavouriteCityCard(
     ) {
         Column(
             modifier = Modifier
-                .recomposeHighlighter()
                 .sizeIn(minHeight = 196.dp)
                 .fillMaxWidth()
                 .clickable { onClickAddFavourite(FavouriteAction.ClickAddFavourite) }
         ) {
             Icon(
                 modifier = Modifier
-                    .recomposeHighlighter()
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 32.dp)
                     .size(64.dp),
@@ -219,16 +236,13 @@ private fun AddFavouriteCityCard(
                 contentDescription = null
             )
             Spacer(
-                modifier = Modifier
-                    .recomposeHighlighter()
-                    .weight(1f)
+                modifier = Modifier.weight(1f)
             )
             Text(
                 text = stringResource(R.string.button_add_favourite),
                 color = Orange,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
-                    .recomposeHighlighter()
                     .align(Alignment.CenterHorizontally)
                     .padding(bottom = 24.dp)
             )
@@ -240,16 +254,19 @@ private fun AddFavouriteCityCard(
 private fun SearchCard(
     onClickSearch: (FavouriteAction) -> Unit
 ) {
+//    Rebugger(trackMap = mapOf("onClickSearch" to onClickSearch))
+    Log.d(
+        "Rebugger",
+        "SearchCard recomposed"
+    )
     val gradient = CardGradients.gradients[3]
 
-    Rebugger(trackMap = mapOf("onClickSearch" to onClickSearch, "gradient" to gradient))
     Card(
         shape = CircleShape
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .recomposeHighlighter()
                 .clickable { onClickSearch(FavouriteAction.ClickSearch) }
                 .fillMaxWidth()
                 .background(gradient.primaryGradient)
@@ -258,16 +275,12 @@ private fun SearchCard(
                 imageVector = Icons.Default.Search,
                 tint = MaterialTheme.colorScheme.background,
                 contentDescription = null,
-                modifier = Modifier
-                    .recomposeHighlighter()
-                    .padding(vertical = 8.dp, horizontal = 16.dp)
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
             )
             Text(
                 text = stringResource(R.string.search),
                 color = MaterialTheme.colorScheme.background,
-                modifier = Modifier
-                    .recomposeHighlighter()
-                    .padding(end = 16.dp)
+                modifier = Modifier.padding(end = 16.dp)
             )
         }
     }

@@ -47,9 +47,9 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.mukas.weatherapp.R
 import com.mukas.weatherapp.presentation.theme.CardGradients
-import com.mukas.weatherapp.presentation.util.recomposeHighlighter
 import com.mukas.weatherapp.presentation.util.tempToFormattedString
 import com.theapache64.rebugger.Rebugger
+import kotlinx.collections.immutable.ImmutableList
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -75,14 +75,11 @@ fun DetailsScreen(
             )
         },
         modifier = Modifier
-            .recomposeHighlighter()
             .fillMaxSize()
             .background(CardGradients.gradients[1].primaryGradient)
     ) { paddingValues ->
         Box(
-            modifier = Modifier
-                .recomposeHighlighter()
-                .padding(paddingValues)
+            modifier = Modifier.padding(paddingValues)
         ) {
             when (val forecastState = state.forecastState) {
                 DetailsState.ForecastState.Error -> {
@@ -156,14 +153,10 @@ private fun TopBar(
 @Composable
 private fun Loading() {
     Box(
-        modifier = Modifier
-            .recomposeHighlighter()
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         CircularProgressIndicator(
-            modifier = Modifier
-                .recomposeHighlighter()
-                .align(Alignment.Center),
+            modifier = Modifier.align(Alignment.Center),
             color = MaterialTheme.colorScheme.background
         )
     }
@@ -179,15 +172,11 @@ private fun Forecast(forecast: ForecastUi) {
     )
 
     Column(
-        modifier = Modifier
-            .recomposeHighlighter()
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(
-            modifier = Modifier
-                .recomposeHighlighter()
-                .weight(1f)
+            modifier = Modifier.weight(1f)
         )
         Text(
             text = forecast.currentWeather.conditionText,
@@ -202,9 +191,7 @@ private fun Forecast(forecast: ForecastUi) {
                 style = MaterialTheme.typography.headlineLarge.copy(fontSize = 70.sp)
             )
             GlideImage(
-                modifier = Modifier
-                    .recomposeHighlighter()
-                    .size(70.dp),
+                modifier = Modifier.size(70.dp),
                 model = forecast.currentWeather.conditionUrl,
                 contentDescription = null
             )
@@ -214,21 +201,17 @@ private fun Forecast(forecast: ForecastUi) {
             style = MaterialTheme.typography.titleLarge
         )
         Spacer(
-            modifier = Modifier
-                .recomposeHighlighter()
-                .weight(1f)
+            modifier = Modifier.weight(1f)
         )
         AnimatedUpcomingWeather(upcoming = forecast.upcoming)
         Spacer(
-            modifier = Modifier
-                .recomposeHighlighter()
-                .weight(0.5f)
+            modifier = Modifier.weight(0.5f)
         )
     }
 }
 
 @Composable
-private fun AnimatedUpcomingWeather(upcoming: List<WeatherUi>) {
+private fun AnimatedUpcomingWeather(upcoming: ImmutableList<WeatherUi>) {
     Rebugger(trackMap = mapOf("upcoming" to upcoming))
 
     val state = remember {
@@ -247,10 +230,9 @@ private fun AnimatedUpcomingWeather(upcoming: List<WeatherUi>) {
 }
 
 @Composable
-private fun UpcomingWeather(upcoming: List<WeatherUi>) {
+private fun UpcomingWeather(upcoming: ImmutableList<WeatherUi>) {
     Card(
         modifier = Modifier
-            .recomposeHighlighter()
             .fillMaxWidth()
             .padding(24.dp),
         shape = MaterialTheme.shapes.extraLarge,
@@ -262,7 +244,6 @@ private fun UpcomingWeather(upcoming: List<WeatherUi>) {
     ) {
         Column(
             modifier = Modifier
-                .recomposeHighlighter()
                 .fillMaxWidth()
                 .padding(24.dp)
         ) {
@@ -270,14 +251,11 @@ private fun UpcomingWeather(upcoming: List<WeatherUi>) {
                 text = stringResource(R.string.upcoming),
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier
-                    .recomposeHighlighter()
                     .padding(bottom = 24.dp)
                     .align(Alignment.CenterHorizontally)
             )
             Row(
-                modifier = Modifier
-                    .recomposeHighlighter()
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 upcoming.forEach {
@@ -296,13 +274,11 @@ private fun RowScope.SmallWeatherCard(weather: WeatherUi) {
             containerColor = MaterialTheme.colorScheme.background
         ),
         modifier = Modifier
-            .recomposeHighlighter()
             .height(128.dp)
             .weight(1f)
     ) {
         Column(
             modifier = Modifier
-                .recomposeHighlighter()
                 .fillMaxSize()
                 .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -310,9 +286,7 @@ private fun RowScope.SmallWeatherCard(weather: WeatherUi) {
         ) {
             Text(text = weather.tempC.tempToFormattedString())
             GlideImage(
-                modifier = Modifier
-                    .recomposeHighlighter()
-                    .size(48.dp),
+                modifier = Modifier.size(48.dp),
                 model = weather.conditionUrl,
                 contentDescription = null
             )

@@ -1,6 +1,7 @@
 package com.mukas.weatherapp.presentation.screen.search
 
 import com.mukas.weatherapp.domain.entity.City
+import kotlinx.collections.immutable.ImmutableList
 
 data class SearchState(
     val searchQuery: String,
@@ -16,6 +17,6 @@ data class SearchState(
 
         data object EmptyResult : RequestState()
 
-        data class SuccessLoaded(val cities: List<City>) : RequestState()
+        data class SuccessLoaded(val cities: ImmutableList<City>) : RequestState()
     }
 }

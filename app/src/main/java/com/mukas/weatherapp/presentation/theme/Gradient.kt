@@ -2,6 +2,7 @@ package com.mukas.weatherapp.presentation.theme
 
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import kotlinx.collections.immutable.persistentListOf
 
 data class Gradient(
     val primaryGradient: Brush,
@@ -21,7 +22,7 @@ data class Gradient(
 }
 
 object CardGradients {
-    val gradients = listOf(
+    val gradients = persistentListOf(
         Gradient(
             firstColor = Color(0xFFFFDF37),
             secondColor = Color(0xFFFF5621),

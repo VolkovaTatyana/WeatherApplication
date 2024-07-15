@@ -8,6 +8,7 @@ import com.mukas.weatherapp.navigation.Router
 import com.mukas.weatherapp.navigation.navigate
 import com.mukas.weatherapp.navigation.pop
 import com.mukas.weatherapp.presentation.screen.details.DetailsScreenDestination
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -57,7 +58,7 @@ class SearchViewModel(
     private suspend fun loadSearchResult(): SearchState.RequestState = withContext(Dispatchers.IO) {
         val query = _state.value.searchQuery
         try {
-            val cities = searchCity(query)
+            val cities = searchCity(query).toPersistentList()
             if (cities.isEmpty()) {
                 SearchState.RequestState.EmptyResult
             } else {
