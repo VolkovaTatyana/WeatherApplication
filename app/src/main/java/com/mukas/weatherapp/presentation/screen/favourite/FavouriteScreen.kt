@@ -1,6 +1,5 @@
 package com.mukas.weatherapp.presentation.screen.favourite
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -50,6 +49,7 @@ import com.mukas.weatherapp.presentation.theme.CardGradients
 import com.mukas.weatherapp.presentation.theme.Gradient
 import com.mukas.weatherapp.presentation.theme.Orange
 import com.mukas.weatherapp.presentation.util.tempToFormattedString
+import com.theapache64.rebugger.Rebugger
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -57,11 +57,7 @@ fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
 
     val state by viewModel.state.collectAsState()
 
-//    Rebugger(trackMap = mapOf("cities" to state.cityItems))
-    Log.d(
-        "Rebugger",
-        "FavouriteScreen recomposed"
-    )
+    Rebugger(trackMap = mapOf("cities" to state.cityItems))
 
     LazyVerticalGrid(
         modifier = Modifier.fillMaxSize(),
@@ -70,7 +66,7 @@ fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
         verticalArrangement = Arrangement.spacedBy(24.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        item(span = { GridItemSpan(2) }) {
+        item(key = "SearchCard", span = { GridItemSpan(2) }) {
             SearchCard(
                 onClickSearch = viewModel::act
             )
@@ -85,7 +81,7 @@ fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
                 onClickCityItem = viewModel::act
             )
         }
-        item {
+        item(key = "AddFavouriteCityCard") {
             AddFavouriteCityCard(
                 onClickAddFavourite = viewModel::act
             )
@@ -101,19 +97,12 @@ private fun CityCard(
 ) {
     val gradient = getGradientByIndex(index)
 
-    Log.d(
-        "Rebugger",
-        "CityCard recomposed: cityItem=$cityItem, index=$index, onClickCityItem=$onClickCityItem"
+    Rebugger(
+        trackMap = mapOf(
+            "onClickCityItem" to onClickCityItem,
+            "weatherState" to cityItem.weatherState
+        )
     )
-//
-//    Rebugger(
-//        trackMap = mapOf(
-//            "city" to cityItem,
-//            "index" to index,
-//            "onClickCityItem" to onClickCityItem,
-//            "weatherState" to cityItem.weatherState
-//        )
-//    )
 
     Card(
         modifier = Modifier
@@ -183,11 +172,7 @@ private fun BoxScope.LoadedWeatherState(
     iconUrl: String,
     tempC: String
 ) {
-//    Rebugger(trackMap = emptyMap())
-    Log.d(
-        "Rebugger",
-        "LoadedWeatherState recomposed"
-    )
+    Rebugger(trackMap = mapOf("iconUrl" to iconUrl, "tempC" to tempC))
 
     GlideImage(
         modifier = Modifier
@@ -210,11 +195,8 @@ private fun BoxScope.LoadedWeatherState(
 private fun AddFavouriteCityCard(
     onClickAddFavourite: (FavouriteAction) -> Unit
 ) {
-//    Rebugger(trackMap = mapOf("onClickAddFavourite" to onClickAddFavourite))
-    Log.d(
-        "Rebugger",
-        "AddFavouriteCityCard recomposed"
-    )
+    Rebugger(trackMap = mapOf("onClickAddFavourite" to onClickAddFavourite))
+
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         shape = MaterialTheme.shapes.extraLarge,
@@ -254,11 +236,8 @@ private fun AddFavouriteCityCard(
 private fun SearchCard(
     onClickSearch: (FavouriteAction) -> Unit
 ) {
-//    Rebugger(trackMap = mapOf("onClickSearch" to onClickSearch))
-    Log.d(
-        "Rebugger",
-        "SearchCard recomposed"
-    )
+    Rebugger(trackMap = mapOf("onClickSearch" to onClickSearch))
+
     val gradient = CardGradients.gradients[3]
 
     Card(
