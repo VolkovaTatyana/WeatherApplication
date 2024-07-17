@@ -59,7 +59,7 @@ fun SearchScreen(
             "searchQuery" to state.searchQuery,
             "requestState" to state.requestState,
             "focusRequester" to focusRequester
-        )
+        ), composableName = "SearchScreen"
     )
 
     LaunchedEffect(key1 = Unit) {
@@ -151,7 +151,7 @@ private fun CityCard(
         trackMap = mapOf(
             "city" to city,
             "onCityClick" to onCityClick
-        )
+        ), composableName = "CityCard"
     )
 
     Card(

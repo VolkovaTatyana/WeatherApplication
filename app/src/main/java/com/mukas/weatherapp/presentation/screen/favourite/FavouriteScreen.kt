@@ -57,7 +57,7 @@ fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
 
     val state by viewModel.state.collectAsState()
 
-    Rebugger(trackMap = mapOf("cities" to state.cityItems))
+    Rebugger(trackMap = mapOf("cities" to state.cityItems), composableName = "FavouriteScreen")
 
     LazyVerticalGrid(
         modifier = Modifier.fillMaxSize(),
@@ -101,7 +101,7 @@ private fun CityCard(
         trackMap = mapOf(
             "onClickCityItem" to onClickCityItem,
             "weatherState" to cityItem.weatherState
-        )
+        ), composableName = "CityCard"
     )
 
     Card(
@@ -172,7 +172,10 @@ private fun BoxScope.LoadedWeatherState(
     iconUrl: String,
     tempC: String
 ) {
-    Rebugger(trackMap = mapOf("iconUrl" to iconUrl, "tempC" to tempC))
+    Rebugger(
+        trackMap = mapOf("iconUrl" to iconUrl, "tempC" to tempC),
+        composableName = "LoadedWeatherState"
+    )
 
     GlideImage(
         modifier = Modifier
@@ -195,7 +198,10 @@ private fun BoxScope.LoadedWeatherState(
 private fun AddFavouriteCityCard(
     onClickAddFavourite: (FavouriteAction) -> Unit
 ) {
-    Rebugger(trackMap = mapOf("onClickAddFavourite" to onClickAddFavourite))
+    Rebugger(
+        trackMap = mapOf("onClickAddFavourite" to onClickAddFavourite),
+        composableName = "AddFavouriteCityCard"
+    )
 
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
@@ -236,7 +242,7 @@ private fun AddFavouriteCityCard(
 private fun SearchCard(
     onClickSearch: (FavouriteAction) -> Unit
 ) {
-    Rebugger(trackMap = mapOf("onClickSearch" to onClickSearch))
+    Rebugger(trackMap = mapOf("onClickSearch" to onClickSearch), composableName = "SearchCard")
 
     val gradient = CardGradients.gradients[3]
 
