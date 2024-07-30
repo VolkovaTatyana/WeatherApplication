@@ -43,8 +43,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil.compose.AsyncImage
 import com.mukas.weatherapp.R
 import com.mukas.weatherapp.presentation.theme.CardGradients
 import com.mukas.weatherapp.presentation.util.tempToFormattedString
@@ -151,7 +150,6 @@ private fun Loading() {
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun Forecast(forecast: ForecastUi) {
 
@@ -174,7 +172,7 @@ private fun Forecast(forecast: ForecastUi) {
                 text = forecast.currentWeather.tempC.tempToFormattedString(),
                 style = MaterialTheme.typography.headlineLarge.copy(fontSize = 70.sp)
             )
-            GlideImage(
+            AsyncImage(
                 modifier = Modifier.size(70.dp),
                 model = forecast.currentWeather.conditionUrl,
                 contentDescription = null
@@ -250,7 +248,6 @@ private fun UpcomingWeather(upcoming: ImmutableList<WeatherUi>) {
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun RowScope.SmallWeatherCard(weather: WeatherUi) {
 
@@ -270,7 +267,7 @@ private fun RowScope.SmallWeatherCard(weather: WeatherUi) {
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(text = weather.tempC.tempToFormattedString())
-            GlideImage(
+            AsyncImage(
                 modifier = Modifier.size(48.dp),
                 model = weather.conditionUrl,
                 contentDescription = null

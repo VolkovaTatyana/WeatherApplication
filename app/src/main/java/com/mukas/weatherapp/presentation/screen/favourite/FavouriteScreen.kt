@@ -43,8 +43,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil.compose.AsyncImage
 import com.mukas.weatherapp.R
 import com.mukas.weatherapp.presentation.theme.CardGradients
 import com.mukas.weatherapp.presentation.theme.Gradient
@@ -167,7 +166,6 @@ private fun CityCard(
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun BoxScope.LoadedWeatherState(
     iconUrl: String,
@@ -178,7 +176,7 @@ private fun BoxScope.LoadedWeatherState(
         composableName = "LoadedWeatherState"
     )
 
-    GlideImage(
+    AsyncImage(
         modifier = Modifier
             .align(Alignment.TopEnd)
             .size(56.dp),

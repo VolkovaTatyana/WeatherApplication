@@ -92,8 +92,8 @@ dependencies {
     implementation(libs.room.core)
     ksp(libs.room.compiler)
 
-    //Glide
-    implementation(libs.glide.compose)
+    //Coil
+    implementation(libs.coil.compose)
 
     //Retrofit
     implementation(libs.retrofit.core)
