@@ -49,15 +49,12 @@ import com.mukas.weatherapp.presentation.theme.CardGradients
 import com.mukas.weatherapp.presentation.theme.Gradient
 import com.mukas.weatherapp.presentation.theme.Orange
 import com.mukas.weatherapp.presentation.util.tempToFormattedString
-import com.theapache64.rebugger.Rebugger
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
 
     val state by viewModel.state.collectAsState()
-
-    Rebugger(trackMap = mapOf("cities" to state.cityItems), composableName = "FavouriteScreen")
 
     LazyVerticalGrid(
         modifier = Modifier.fillMaxSize(),
@@ -96,13 +93,6 @@ private fun CityCard(
     onClickCityItem: (FavouriteAction) -> Unit
 ) {
     val gradient = remember { getGradientByIndex(index) }
-
-    Rebugger(
-        trackMap = mapOf(
-            "onClickCityItem" to onClickCityItem,
-            "weatherState" to cityItem.weatherState
-        ), composableName = "CityCard"
-    )
 
     Card(
         modifier = Modifier
@@ -171,10 +161,6 @@ private fun BoxScope.LoadedWeatherState(
     iconUrl: String,
     tempC: String
 ) {
-    Rebugger(
-        trackMap = mapOf("iconUrl" to iconUrl, "tempC" to tempC),
-        composableName = "LoadedWeatherState"
-    )
 
     AsyncImage(
         modifier = Modifier
