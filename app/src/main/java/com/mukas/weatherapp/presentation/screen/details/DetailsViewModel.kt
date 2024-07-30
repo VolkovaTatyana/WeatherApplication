@@ -39,7 +39,9 @@ class DetailsViewModel(
         changeForecastState(DetailsState.ForecastState.Loading)
 
         viewModelScope.launch {
-            observeFavouriteState(cityId)
+            withContext(Dispatchers.IO) {
+                observeFavouriteState(cityId)
+            }
                 .collect {
                     act(DetailsAction.FavouriteStateChanged(it))
                 }
@@ -86,7 +88,7 @@ class DetailsViewModel(
             }
 
             DetailsAction.ClickChangeFavouriteState -> {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     if (_state.value.isFavourite) {
                         changeFavouriteState.removeFromFavourite(cityId = _state.value.city.id)
                     } else {

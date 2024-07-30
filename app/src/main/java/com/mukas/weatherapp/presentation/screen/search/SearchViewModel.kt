@@ -82,7 +82,7 @@ class SearchViewModel(
 
             is SearchAction.ClickCity -> {
                 if (isSearchToAddFavourite) {
-                    viewModelScope.launch {
+                    viewModelScope.launch(Dispatchers.IO) {
                         changeFavouriteState.addToFavourite(action.city)
                     }
                     router.pop()

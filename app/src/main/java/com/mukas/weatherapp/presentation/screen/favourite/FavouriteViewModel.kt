@@ -30,7 +30,9 @@ class FavouriteViewModel(
 
     init {
         viewModelScope.launch {
-            getFavouriteCities()
+            withContext(Dispatchers.IO) {
+                getFavouriteCities()
+            }
                 .collect { cities ->
                     val cityItems = cities.map { it.toCityItemInitial() }
                     initLoadingState(cityItems)
