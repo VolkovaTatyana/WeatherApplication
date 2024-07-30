@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -95,7 +96,7 @@ private fun CityCard(
     index: Int,
     onClickCityItem: (FavouriteAction) -> Unit
 ) {
-    val gradient = getGradientByIndex(index)
+    val gradient = remember { getGradientByIndex(index) }
 
     Rebugger(
         trackMap = mapOf(
@@ -198,10 +199,6 @@ private fun BoxScope.LoadedWeatherState(
 private fun AddFavouriteCityCard(
     onClickAddFavourite: (FavouriteAction) -> Unit
 ) {
-    Rebugger(
-        trackMap = mapOf("onClickAddFavourite" to onClickAddFavourite),
-        composableName = "AddFavouriteCityCard"
-    )
 
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
@@ -242,7 +239,6 @@ private fun AddFavouriteCityCard(
 private fun SearchCard(
     onClickSearch: (FavouriteAction) -> Unit
 ) {
-    Rebugger(trackMap = mapOf("onClickSearch" to onClickSearch), composableName = "SearchCard")
 
     val gradient = CardGradients.gradients[3]
 

@@ -48,7 +48,6 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.mukas.weatherapp.R
 import com.mukas.weatherapp.presentation.theme.CardGradients
 import com.mukas.weatherapp.presentation.util.tempToFormattedString
-import com.theapache64.rebugger.Rebugger
 import kotlinx.collections.immutable.ImmutableList
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -83,11 +82,9 @@ fun DetailsScreen(
         ) {
             when (val forecastState = state.forecastState) {
                 DetailsState.ForecastState.Error -> {
-                    Error()
                 }
 
                 DetailsState.ForecastState.Initial -> {
-                    Initial()
                 }
 
                 is DetailsState.ForecastState.Loaded -> {
@@ -109,14 +106,6 @@ private fun TopBar(
     isCityFavourite: Boolean,
     onClick: (DetailsAction) -> Unit
 ) {
-
-    Rebugger(
-        trackMap = mapOf(
-            "cityName" to cityName,
-            "isFavourite" to isCityFavourite,
-            "onClick" to onClick
-        ), composableName = "TopBar"
-    )
 
     CenterAlignedTopAppBar(
         title = { Text(text = cityName) },
@@ -165,7 +154,6 @@ private fun Loading() {
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun Forecast(forecast: ForecastUi) {
-    Rebugger(trackMap = mapOf("forecast" to forecast), composableName = "Forecast")
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -208,7 +196,6 @@ private fun Forecast(forecast: ForecastUi) {
 
 @Composable
 private fun AnimatedUpcomingWeather(upcoming: ImmutableList<WeatherUi>) {
-    Rebugger(trackMap = mapOf("upcoming" to upcoming), composableName = "AnimatedUpcomingWeather")
 
     val state = remember {
         MutableTransitionState(false).apply {
@@ -227,7 +214,6 @@ private fun AnimatedUpcomingWeather(upcoming: ImmutableList<WeatherUi>) {
 
 @Composable
 private fun UpcomingWeather(upcoming: ImmutableList<WeatherUi>) {
-    Rebugger(trackMap = mapOf("upcoming" to upcoming), composableName = "UpcomingWeather")
 
     Card(
         modifier = Modifier
@@ -267,7 +253,6 @@ private fun UpcomingWeather(upcoming: ImmutableList<WeatherUi>) {
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun RowScope.SmallWeatherCard(weather: WeatherUi) {
-    Rebugger(trackMap = mapOf("weather" to weather), composableName = "SmallWeatherCard")
 
     Card(
         colors = CardDefaults.cardColors(
@@ -293,14 +278,4 @@ private fun RowScope.SmallWeatherCard(weather: WeatherUi) {
             Text(text = weather.formattedShortDayOfWeek)
         }
     }
-}
-
-@Composable
-private fun Initial() {
-
-}
-
-@Composable
-private fun Error() {
-
 }

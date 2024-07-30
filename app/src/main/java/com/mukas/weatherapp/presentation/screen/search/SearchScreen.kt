@@ -36,7 +36,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mukas.weatherapp.R
 import com.mukas.weatherapp.domain.entity.City
-import com.theapache64.rebugger.Rebugger
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -53,14 +52,6 @@ fun SearchScreen(
     val focusRequester = remember {
         FocusRequester()
     }
-
-    Rebugger(
-        trackMap = mapOf(
-            "searchQuery" to state.searchQuery,
-            "requestState" to state.requestState,
-            "focusRequester" to focusRequester
-        ), composableName = "SearchScreen"
-    )
 
     LaunchedEffect(key1 = Unit) {
         focusRequester.requestFocus()
@@ -147,12 +138,6 @@ private fun CityCard(
     city: City,
     onCityClick: (SearchAction) -> Unit
 ) {
-    Rebugger(
-        trackMap = mapOf(
-            "city" to city,
-            "onCityClick" to onCityClick
-        ), composableName = "CityCard"
-    )
 
     Card(
         modifier = Modifier.fillMaxSize()

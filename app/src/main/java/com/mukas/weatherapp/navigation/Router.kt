@@ -24,7 +24,7 @@ interface Router {
         }
 
         private fun performPop() {
-            navController?.popBackStack()
+            navController?.navigateUp()
         }
 
         private fun performNavigate(destination: ScreenDestination) {
