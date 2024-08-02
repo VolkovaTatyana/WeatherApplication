@@ -1,7 +1,7 @@
 package com.mukas.weatherapp.presentation.screen.details
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mukas.weatherapp.base.BaseViewModel
 import com.mukas.weatherapp.domain.entity.City
 import com.mukas.weatherapp.domain.usecase.ChangeFavouriteStateUseCase
 import com.mukas.weatherapp.domain.usecase.GetForecastUseCase
@@ -10,8 +10,6 @@ import com.mukas.weatherapp.navigation.Router
 import com.mukas.weatherapp.navigation.pop
 import com.mukas.weatherapp.presentation.util.toForecastUi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -24,16 +22,17 @@ class DetailsViewModel(
     private val observeFavouriteState: ObserveFavouriteStateUseCase,
     private val changeFavouriteState: ChangeFavouriteStateUseCase,
     private val router: Router
-) : ViewModel() {
+) : BaseViewModel<DetailsState>() {
 
-    private val _state = MutableStateFlow(
-        DetailsState(
-            city = City(id = cityId, name = cityName, country = country),
+    private val city = City(id = cityId, name = cityName, country = country)
+
+    override fun createInitialState(): DetailsState {
+        return DetailsState(
+            city = city,
             isFavourite = false,
             forecastState = DetailsState.ForecastState.Initial
         )
-    )
-    val state = _state.asStateFlow()
+    }
 
     init {
         changeForecastState(DetailsState.ForecastState.Loading)

@@ -1,7 +1,7 @@
 package com.mukas.weatherapp.presentation.screen.search
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mukas.weatherapp.base.BaseViewModel
 import com.mukas.weatherapp.domain.usecase.ChangeFavouriteStateUseCase
 import com.mukas.weatherapp.domain.usecase.SearchCityUseCase
 import com.mukas.weatherapp.navigation.Router
@@ -10,8 +10,6 @@ import com.mukas.weatherapp.navigation.pop
 import com.mukas.weatherapp.presentation.screen.details.DetailsScreenDestination
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,15 +19,14 @@ class SearchViewModel(
     private val router: Router,
     private val searchCity: SearchCityUseCase,
     private val changeFavouriteState: ChangeFavouriteStateUseCase
-) : ViewModel() {
+) : BaseViewModel<SearchState>() {
 
-    private val _state = MutableStateFlow(
-        SearchState(
+    override fun createInitialState(): SearchState {
+        return SearchState(
             searchQuery = "",
             requestState = SearchState.RequestState.Initial
         )
-    )
-    val state = _state.asStateFlow()
+    }
 
     private fun changeRequestState(newRequestState: SearchState.RequestState) {
         _state.update {

@@ -1,7 +1,7 @@
 package com.mukas.weatherapp.presentation.screen.favourite
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mukas.weatherapp.base.BaseViewModel
 import com.mukas.weatherapp.domain.entity.City
 import com.mukas.weatherapp.domain.usecase.GetCurrentWeatherUseCase
 import com.mukas.weatherapp.domain.usecase.GetFavouriteCitiesUseCase
@@ -13,8 +13,6 @@ import com.mukas.weatherapp.presentation.util.toCityItemInitial
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -23,10 +21,11 @@ class FavouriteViewModel(
     private val router: Router,
     private val getFavouriteCities: GetFavouriteCitiesUseCase,
     private val getCurrentWeather: GetCurrentWeatherUseCase
-) : ViewModel() {
+) : BaseViewModel<FavouriteState>() {
 
-    private val _state = MutableStateFlow(FavouriteState(persistentListOf()))
-    val state = _state.asStateFlow()
+    override fun createInitialState(): FavouriteState {
+        return FavouriteState(persistentListOf())
+    }
 
     init {
         viewModelScope.launch {
