@@ -12,7 +12,9 @@ import com.mukas.weatherapp.presentation.screen.search.SearchScreenDestination
 import com.mukas.weatherapp.presentation.util.toCityItemInitial
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -58,8 +60,11 @@ class FavouriteViewModel(
         viewModelScope.launch {
 
             val resultList = cities.map { cityItem ->
-                val weatherState = loadWeatherForCity(cityItem.city)
-                cityItem.copy(weatherState = weatherState)
+                val deferred = loadWeatherForCity(cityItem.city)
+                Pair(cityItem, deferred)
+            }.map { pair ->
+                val weatherState = pair.second.await()
+                pair.first.copy(weatherState = weatherState)
             }.toImmutableList()
 
             _state.update {
@@ -68,8 +73,8 @@ class FavouriteViewModel(
         }
     }
 
-    private suspend fun loadWeatherForCity(city: City): FavouriteState.WeatherState =
-        withContext(Dispatchers.IO) {
+    private suspend fun loadWeatherForCity(city: City): Deferred<FavouriteState.WeatherState> =
+        viewModelScope.async(Dispatchers.IO) {
             try {
                 val weather = getCurrentWeather(city.id)
                 FavouriteState.WeatherState.Loaded(
