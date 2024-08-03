@@ -108,4 +108,8 @@ class FavouriteViewModel(
             }
         }
     }
+
+    fun refresh() {
+        initLoadingState(_state.value.cityItems)
+    }
 }
