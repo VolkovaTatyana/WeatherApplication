@@ -49,12 +49,34 @@ import com.mukas.weatherapp.presentation.theme.CardGradients
 import com.mukas.weatherapp.presentation.theme.Gradient
 import com.mukas.weatherapp.presentation.theme.Orange
 import com.mukas.weatherapp.presentation.util.tempToFormattedString
+import com.theapache64.rebugger.Rebugger
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
 
     val state by viewModel.state.collectAsState()
+
+    val onClickSearchCallback = remember {
+        {
+            viewModel.act(action = FavouriteAction.ClickSearch)
+        }
+    }
+
+    val onClickAddFavouriteCallback = remember {
+        {
+            viewModel.act(action = FavouriteAction.ClickAddFavourite)
+        }
+    }
+
+    Rebugger(
+        trackMap = mapOf(
+            "viewModel" to viewModel,
+            "state" to state,
+            "onClickSearchCallback" to onClickSearchCallback,
+            "onClickAddFavouriteCallback" to onClickAddFavouriteCallback,
+        ), composableName = "FavouriteScreen"
+    )
 
     LazyVerticalGrid(
         modifier = Modifier.fillMaxSize(),
@@ -65,7 +87,7 @@ fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
     ) {
         item(key = "SearchCard", span = { GridItemSpan(2) }) {
             SearchCard(
-                onClickSearch = viewModel::act
+                onClickSearch = onClickSearchCallback
             )
         }
         itemsIndexed(
@@ -80,7 +102,7 @@ fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
         }
         item(key = "AddFavouriteCityCard") {
             AddFavouriteCityCard(
-                onClickAddFavourite = viewModel::act
+                onClickAddFavourite = onClickAddFavouriteCallback
             )
         }
     }
@@ -93,6 +115,15 @@ private fun CityCard(
     onClickCityItem: (FavouriteAction) -> Unit
 ) {
     val gradient = remember { getGradientByIndex(index) }
+
+    Rebugger(
+        trackMap = mapOf(
+            "cityItem" to cityItem,
+            "index" to index,
+            "onClickCityItem" to onClickCityItem,
+            "gradient" to gradient,
+        ), composableName = "CityCard"
+    )
 
     Card(
         modifier = Modifier
@@ -181,8 +212,13 @@ private fun BoxScope.LoadedWeatherState(
 
 @Composable
 private fun AddFavouriteCityCard(
-    onClickAddFavourite: (FavouriteAction) -> Unit
+    onClickAddFavourite: () -> Unit
 ) {
+    Rebugger(
+        trackMap = mapOf(
+            "onClickAddFavourite" to onClickAddFavourite,
+        ), composableName = "AddFavouriteCityCard"
+    )
 
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
@@ -193,7 +229,7 @@ private fun AddFavouriteCityCard(
             modifier = Modifier
                 .sizeIn(minHeight = 196.dp)
                 .fillMaxWidth()
-                .clickable { onClickAddFavourite(FavouriteAction.ClickAddFavourite) }
+                .clickable { onClickAddFavourite() }
         ) {
             Icon(
                 modifier = Modifier
@@ -221,10 +257,19 @@ private fun AddFavouriteCityCard(
 
 @Composable
 private fun SearchCard(
-    onClickSearch: (FavouriteAction) -> Unit
+    onClickSearch: () -> Unit
 ) {
 
-    val gradient = CardGradients.gradients[3]
+    val gradient = remember {
+        CardGradients.gradients[3]
+    }
+
+    Rebugger(
+        trackMap = mapOf(
+            "onClickSearch" to onClickSearch,
+            "gradient" to gradient,
+        ), composableName = "SearchCard"
+    )
 
     Card(
         shape = CircleShape
@@ -232,7 +277,7 @@ private fun SearchCard(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .clickable { onClickSearch(FavouriteAction.ClickSearch) }
+                .clickable { onClickSearch() }
                 .fillMaxWidth()
                 .background(gradient.primaryGradient)
         ) {
