@@ -106,10 +106,10 @@ class FavouriteViewModel(
             FavouriteAction.ClickSearch -> {
                 router.navigate(SearchScreenDestination())
             }
-        }
-    }
 
-    fun refresh() {
-        initLoadingState(_state.value.cityItems)
+            FavouriteAction.Refresh -> {
+                initLoadingState(_state.value.cityItems)
+            }
+        }
     }
 }

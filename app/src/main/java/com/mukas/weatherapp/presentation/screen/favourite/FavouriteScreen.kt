@@ -64,15 +64,13 @@ fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
 
     val refreshingState by remember {
         derivedStateOf {
-            state.cityItems.any {
-                it.weatherState::class.simpleName == FavouriteState.WeatherState.Loading::class.simpleName
-            }
+            state.cityItems.any { it.weatherState is FavouriteState.WeatherState.Loading }
         }
     }
 
     val refreshState = rememberPullRefreshState(
         refreshingState,
-        viewModel::refresh
+        { viewModel.act(FavouriteAction.Refresh) }
     )
 
     Box(Modifier.pullRefresh(refreshState)) {
