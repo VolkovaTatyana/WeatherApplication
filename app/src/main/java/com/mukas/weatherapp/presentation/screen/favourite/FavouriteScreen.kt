@@ -20,9 +20,13 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -31,6 +35,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -52,10 +57,22 @@ import com.mukas.weatherapp.presentation.util.tempToFormattedString
 import com.theapache64.rebugger.Rebugger
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
 
     val state by viewModel.state.collectAsState()
+
+    val refreshingState by remember {
+        derivedStateOf {
+            state.cityItems.any { it.weatherState is FavouriteState.WeatherState.Loading }
+        }
+    }
+
+    val refreshState = rememberPullRefreshState(
+        refreshingState,
+        { viewModel.act(FavouriteAction.Refresh) }
+    )
 
     val onClickSearchCallback = remember {
         {
@@ -69,42 +86,42 @@ fun FavouriteScreen(viewModel: FavouriteViewModel = koinViewModel()) {
         }
     }
 
-    Rebugger(
-        trackMap = mapOf(
-            "viewModel" to viewModel,
-            "state" to state,
-            "onClickSearchCallback" to onClickSearchCallback,
-            "onClickAddFavouriteCallback" to onClickAddFavouriteCallback,
-        ), composableName = "FavouriteScreen"
-    )
+    Box(Modifier.pullRefresh(refreshState)) {
+        LazyVerticalGrid(
+            modifier = Modifier.fillMaxSize(),
+            columns = GridCells.Fixed(2),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            item(key = "SearchCard", span = { GridItemSpan(2) }) {
+                SearchCard(
+                    onClickSearch = viewModel::act
+                )
+            }
+            itemsIndexed(
+                items = state.cityItems,
+                key = { _, item -> item.city.id }
+            ) { index, item ->
+                CityCard(
+                    cityItem = item,
+                    index = index,
+                    onClickCityItem = viewModel::act
+                )
+            }
+            item(key = "AddFavouriteCityCard") {
+                AddFavouriteCityCard(
+                    onClickAddFavourite = viewModel::act
+                )
+            }
+        }
 
-    LazyVerticalGrid(
-        modifier = Modifier.fillMaxSize(),
-        columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(24.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        item(key = "SearchCard", span = { GridItemSpan(2) }) {
-            SearchCard(
-                onClickSearch = onClickSearchCallback
-            )
-        }
-        itemsIndexed(
-            items = state.cityItems,
-            key = { _, item -> item.city.id }
-        ) { index, item ->
-            CityCard(
-                cityItem = item,
-                index = index,
-                onClickCityItem = viewModel::act
-            )
-        }
-        item(key = "AddFavouriteCityCard") {
-            AddFavouriteCityCard(
-                onClickAddFavourite = onClickAddFavouriteCallback
-            )
-        }
+        PullRefreshIndicator(
+            refreshingState,
+            refreshState,
+            Modifier.align(Alignment.TopCenter),
+            contentColor = Color.Magenta
+        )
     }
 }
 
