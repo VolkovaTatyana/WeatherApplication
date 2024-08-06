@@ -2,6 +2,7 @@ package com.mukas.weatherapp.di
 
 import com.mukas.weatherapp.BuildConfig
 import com.mukas.weatherapp.data.network.api.ApiService
+import com.mukas.weatherapp.data.network.interceptor.RetryInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
@@ -27,6 +28,7 @@ val networkModule = module {
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
+            .addInterceptor(RetryInterceptor())
             .build()
     }
 
