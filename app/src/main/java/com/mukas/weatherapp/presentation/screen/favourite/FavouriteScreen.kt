@@ -174,7 +174,14 @@ private fun CityCard(
                     )
                 }
 
-                is FavouriteState.WeatherState.Error -> {}
+                is FavouriteState.WeatherState.Error -> {
+                    Text(
+                        text = stringResource(R.string.failed_to_retrieve_data),
+                        modifier = Modifier.padding(8.dp),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.background
+                    )
+                }
             }
 
             Text(

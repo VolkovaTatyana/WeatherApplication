@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Card
@@ -81,6 +82,7 @@ fun DetailsScreen(
         ) {
             when (val forecastState = state.forecastState) {
                 DetailsState.ForecastState.Error -> {
+                    ErrorState()
                 }
 
                 DetailsState.ForecastState.Initial -> {
@@ -274,5 +276,29 @@ private fun RowScope.SmallWeatherCard(weather: WeatherUi) {
             )
             Text(text = weather.formattedShortDayOfWeek)
         }
+    }
+}
+
+@Composable
+private fun ErrorState() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .size(64.dp),
+            imageVector = Icons.Filled.Android,
+            contentDescription = null,
+            tint = Color.White
+        )
+        Text(
+            text = stringResource(R.string.failed_to_retrieve_data),
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.background
+        )
     }
 }
