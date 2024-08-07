@@ -7,4 +7,6 @@ sealed class DetailsAction {
     data object ClickChangeFavouriteState : DetailsAction()
 
     data class FavouriteStateChanged(val isFavourite: Boolean) : DetailsAction()
+
+    data class PagerStateChanged(val page: Int) : DetailsAction()
 }

@@ -5,7 +5,7 @@ import com.mukas.weatherapp.domain.repository.FavouriteRepository
 import kotlinx.coroutines.flow.Flow
 
 
-class GetFavouriteCitiesUseCase(
+class ObserveFavouriteCitiesUseCase(
     private val repository: FavouriteRepository
 ) {
 

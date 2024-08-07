@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.mukas.weatherapp.base.BaseViewModel
 import com.mukas.weatherapp.domain.entity.City
 import com.mukas.weatherapp.domain.usecase.GetCurrentWeatherUseCase
-import com.mukas.weatherapp.domain.usecase.GetFavouriteCitiesUseCase
+import com.mukas.weatherapp.domain.usecase.ObserveFavouriteCitiesUseCase
 import com.mukas.weatherapp.navigation.Router
 import com.mukas.weatherapp.navigation.navigate
 import com.mukas.weatherapp.presentation.screen.details.DetailsScreenDestination
@@ -21,7 +21,7 @@ import kotlinx.coroutines.withContext
 
 class FavouriteViewModel(
     private val router: Router,
-    private val getFavouriteCities: GetFavouriteCitiesUseCase,
+    private val observeFavouriteCities: ObserveFavouriteCitiesUseCase,
     private val getCurrentWeather: GetCurrentWeatherUseCase
 ) : BaseViewModel<FavouriteState>() {
 
@@ -32,7 +32,7 @@ class FavouriteViewModel(
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                getFavouriteCities()
+                observeFavouriteCities()
             }
                 .collect { cities ->
                     val cityItems = cities.map { it.toCityItemInitial() }
@@ -92,9 +92,11 @@ class FavouriteViewModel(
             is FavouriteAction.CityItemClick -> {
                 router.navigate(
                     DetailsScreenDestination(
-                        cityId = action.city.id,
-                        cityName = action.city.name,
-                        country = action.city.country
+                        citiesAmount = _state.value.cityItems.size,
+                        cityPositionInList = _state.value.cityItems.indexOf(action.cityItem),
+                        cityId = action.cityItem.city.id,
+                        cityName = action.cityItem.city.name,
+                        country = action.cityItem.city.country
                     )
                 )
             }

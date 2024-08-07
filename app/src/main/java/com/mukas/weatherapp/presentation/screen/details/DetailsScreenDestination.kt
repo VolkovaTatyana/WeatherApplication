@@ -4,10 +4,12 @@ import com.mukas.weatherapp.navigation.Screen
 import com.mukas.weatherapp.navigation.ScreenDestination
 
 class DetailsScreenDestination(
+    citiesAmount: Int,
+    cityPositionInList: Int,
     cityId: Int,
     cityName: String,
     country: String
 ) : ScreenDestination() {
 
-    override val route = Screen.Details(cityId, cityName, country)
+    override val route = Screen.Details(citiesAmount, cityPositionInList, cityId, cityName, country)
 }

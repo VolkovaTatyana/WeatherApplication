@@ -51,8 +51,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.mukas.weatherapp.R
 import com.mukas.weatherapp.presentation.theme.CardGradients
-import com.mukas.weatherapp.presentation.theme.Gradient
 import com.mukas.weatherapp.presentation.theme.Orange
+import com.mukas.weatherapp.presentation.util.getGradientByIndex
 import com.mukas.weatherapp.presentation.util.tempToFormattedString
 import org.koin.androidx.compose.koinViewModel
 
@@ -153,7 +153,7 @@ private fun CityCard(
                         radius = size.maxDimension / 2
                     )
                 }
-                .clickable { onClickCityItem(FavouriteAction.CityItemClick(cityItem.city)) }
+                .clickable { onClickCityItem(FavouriteAction.CityItemClick(cityItem)) }
                 .padding(24.dp)
         ) {
             when (val weatherState = cityItem.weatherState) {
@@ -291,9 +291,4 @@ private fun SearchCard(
             )
         }
     }
-}
-
-private fun getGradientByIndex(index: Int): Gradient {
-    val gradients = CardGradients.gradients
-    return gradients[index % gradients.size]
 }

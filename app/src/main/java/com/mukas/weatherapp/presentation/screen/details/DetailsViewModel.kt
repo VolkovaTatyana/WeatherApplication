@@ -5,29 +5,38 @@ import com.mukas.weatherapp.base.BaseViewModel
 import com.mukas.weatherapp.domain.entity.City
 import com.mukas.weatherapp.domain.usecase.ChangeFavouriteStateUseCase
 import com.mukas.weatherapp.domain.usecase.GetForecastUseCase
+import com.mukas.weatherapp.domain.usecase.ObserveFavouriteCitiesUseCase
 import com.mukas.weatherapp.domain.usecase.ObserveFavouriteStateUseCase
 import com.mukas.weatherapp.navigation.Router
 import com.mukas.weatherapp.navigation.pop
 import com.mukas.weatherapp.presentation.util.toForecastUi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class DetailsViewModel(
+    val citiesAmount: Int,
+    val cityPositionInList: Int,
     cityId: Int,
     cityName: String,
     country: String,
+    private val observeFavouriteCities: ObserveFavouriteCitiesUseCase,
     private val getForecast: GetForecastUseCase,
-    private val observeFavouriteState: ObserveFavouriteStateUseCase,
+    private val observeFavouriteStateUseCase: ObserveFavouriteStateUseCase,
     private val changeFavouriteState: ChangeFavouriteStateUseCase,
     private val router: Router
 ) : BaseViewModel<DetailsState>() {
 
     private val city = City(id = cityId, name = cityName, country = country)
 
+    private lateinit var cityList: List<City>
+
     override fun createInitialState(): DetailsState {
         return DetailsState(
+            citiesAmount = citiesAmount,
+            cityPositionInList = cityPositionInList,
             city = city,
             isFavourite = false,
             forecastState = DetailsState.ForecastState.Initial
@@ -35,11 +44,21 @@ class DetailsViewModel(
     }
 
     init {
-        changeForecastState(DetailsState.ForecastState.Loading)
-
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                observeFavouriteState(cityId)
+                cityList = observeFavouriteCities().first()
+            }
+        }
+
+        changeForecastState(DetailsState.ForecastState.Loading)
+
+        observeFavouriteState(cityId)
+    }
+
+    private fun observeFavouriteState(cityId: Int) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                observeFavouriteStateUseCase(cityId)
             }
                 .collect {
                     act(DetailsAction.FavouriteStateChanged(it))
@@ -97,8 +116,28 @@ class DetailsViewModel(
             }
 
             is DetailsAction.FavouriteStateChanged -> {
-                _state.value = _state.value.copy(isFavourite = action.isFavourite)
+                _state.update {
+                    it.copy(isFavourite = action.isFavourite)
+                }
+            }
+
+            is DetailsAction.PagerStateChanged -> {
+                setNewState(action.page)
             }
         }
+    }
+
+    private fun setNewState(position: Int) {
+        val city = cityList[position]
+        _state.update {
+            it.copy(
+                city = city,
+                cityPositionInList = position,
+                isFavourite = true,
+                forecastState = DetailsState.ForecastState.Initial
+            )
+        }
+        observeFavouriteState(city.id)
+        changeForecastState(DetailsState.ForecastState.Loading)
     }
 }

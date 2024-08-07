@@ -86,6 +86,8 @@ class SearchViewModel(
                 } else {
                     router.navigate(
                         DetailsScreenDestination(
+                            citiesAmount = 1,
+                            cityPositionInList = 0,
                             cityId = action.city.id,
                             cityName = action.city.name,
                             country = action.city.country
