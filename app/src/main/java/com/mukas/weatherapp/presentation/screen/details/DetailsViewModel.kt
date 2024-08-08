@@ -29,7 +29,9 @@ class DetailsViewModel(
     private val router: Router
 ) : BaseViewModel<DetailsState>() {
 
-    private val city = City(id = cityId, name = cityName, country = country)
+    //TODO addingTime
+    private val city =
+        City(id = cityId, name = cityName, country = country, addingTime = cityId.toLong())
 
     private lateinit var cityList: List<City>
 

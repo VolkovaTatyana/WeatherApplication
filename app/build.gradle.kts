@@ -115,3 +115,8 @@ dependencies {
     //Pull For Refresh Material
     implementation(libs.androidx.material)
 }
+
+// Settings for Room AutoMigration
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
