@@ -38,7 +38,7 @@ val viewModelModule = module {
             country = parameters.get(),
             observeFavouriteCities = get(),
             getForecast = get(),
-            observeFavouriteStateUseCase = get(),
+            getFavouriteState = get(),
             changeFavouriteState = get(),
             router = get()
         )

@@ -8,9 +8,9 @@ interface FavouriteRepository {
 
     val favouriteCities: Flow<List<City>>
 
-    fun observeIsFavourite(cityId: Int): Flow<Boolean>
-
     suspend fun addToFavourite(city: City)
 
     suspend fun removeFromFavourite(cityId: Int)
+
+    suspend fun isFavourite(cityId: Int): Boolean
 }

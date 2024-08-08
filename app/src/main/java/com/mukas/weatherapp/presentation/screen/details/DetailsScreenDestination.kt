@@ -4,8 +4,8 @@ import com.mukas.weatherapp.navigation.Screen
 import com.mukas.weatherapp.navigation.ScreenDestination
 
 class DetailsScreenDestination(
-    citiesAmount: Int,
-    cityPositionInList: Int,
+    citiesAmount: Int = 1,
+    cityPositionInList: Int = 0,
     cityId: Int,
     cityName: String,
     country: String

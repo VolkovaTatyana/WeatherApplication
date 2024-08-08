@@ -76,8 +76,17 @@ fun DetailsScreen(
         state.citiesAmount
     }
 
-    LaunchedEffect(key1 = pagerState.currentPage) {
-        viewModel.act(DetailsAction.PagerStateChanged(pagerState.currentPage))
+    // This condition means that we have list of favourite cities
+    // and Pager will work
+    // else we have only one city to show
+    if (citiesAmount > 1) {
+        LaunchedEffect(key1 = pagerState.currentPage) {
+            viewModel.act(DetailsAction.PagerStateChanged(pagerState.currentPage))
+        }
+    }
+
+    val gradient = remember {
+        getGradientByIndex(cityId).primaryGradient
     }
 
     HorizontalPager(
@@ -99,7 +108,11 @@ fun DetailsScreen(
             modifier = Modifier
                 .pagerCubeInDepthTransition(page, pagerState)
                 .fillMaxSize()
-                .background(getGradientByIndex(page).primaryGradient)
+                .background(
+                    if (citiesAmount > 1) {
+                        getGradientByIndex(page).primaryGradient
+                    } else gradient
+                )
         ) { paddingValues ->
             Box(
                 modifier = Modifier.padding(paddingValues)

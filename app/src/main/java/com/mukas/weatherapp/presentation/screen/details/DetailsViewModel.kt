@@ -4,9 +4,9 @@ import androidx.lifecycle.viewModelScope
 import com.mukas.weatherapp.base.BaseViewModel
 import com.mukas.weatherapp.domain.entity.City
 import com.mukas.weatherapp.domain.usecase.ChangeFavouriteStateUseCase
+import com.mukas.weatherapp.domain.usecase.GetFavouriteStateUseCase
 import com.mukas.weatherapp.domain.usecase.GetForecastUseCase
 import com.mukas.weatherapp.domain.usecase.ObserveFavouriteCitiesUseCase
-import com.mukas.weatherapp.domain.usecase.ObserveFavouriteStateUseCase
 import com.mukas.weatherapp.navigation.Router
 import com.mukas.weatherapp.navigation.pop
 import com.mukas.weatherapp.presentation.util.toForecastUi
@@ -24,7 +24,7 @@ class DetailsViewModel(
     country: String,
     private val observeFavouriteCities: ObserveFavouriteCitiesUseCase,
     private val getForecast: GetForecastUseCase,
-    private val observeFavouriteStateUseCase: ObserveFavouriteStateUseCase,
+    private val getFavouriteState: GetFavouriteStateUseCase,
     private val changeFavouriteState: ChangeFavouriteStateUseCase,
     private val router: Router
 ) : BaseViewModel<DetailsState>() {
@@ -52,17 +52,33 @@ class DetailsViewModel(
 
         changeForecastState(DetailsState.ForecastState.Loading)
 
-        observeFavouriteState(cityId)
+        observeFavouriteState()
     }
 
-    private fun observeFavouriteState(cityId: Int) {
+    //Get actual data when user add or remove favorite
+    private fun observeFavouriteState() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                observeFavouriteStateUseCase(cityId)
+                observeFavouriteCities()
             }
-                .collect {
-                    act(DetailsAction.FavouriteStateChanged(it))
+                .collect { list ->
+                    val isFavourite = list.any { it.id == _state.value.city.id }
+                    if (_state.value.isFavourite != isFavourite) {
+                        act(DetailsAction.FavouriteStateChanged(isFavourite))
+                    }
                 }
+        }
+    }
+
+    //Get favourite state for new page in pager
+    private fun getInitialFavouriteState(cityId: Int) {
+        viewModelScope.launch {
+            val isFavourite = withContext(Dispatchers.IO) {
+                getFavouriteState(cityId)
+            }
+            if (_state.value.isFavourite != isFavourite) {
+                act(DetailsAction.FavouriteStateChanged(isFavourite))
+            }
         }
     }
 
@@ -137,7 +153,7 @@ class DetailsViewModel(
                 forecastState = DetailsState.ForecastState.Initial
             )
         }
-        observeFavouriteState(city.id)
+        getInitialFavouriteState(city.id)
         changeForecastState(DetailsState.ForecastState.Loading)
     }
 }
