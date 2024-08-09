@@ -53,7 +53,8 @@ class MainActivity : ComponentActivity() {
                             cityPositionInList = args.cityPositionInList,
                             cityId = args.cityId,
                             cityName = args.cityName,
-                            country = args.country
+                            country = args.country,
+                            addingTime = args.addingTime
                         )
                     }
                 }

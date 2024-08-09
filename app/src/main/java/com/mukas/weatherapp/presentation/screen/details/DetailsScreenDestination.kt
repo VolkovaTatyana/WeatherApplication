@@ -8,8 +8,10 @@ class DetailsScreenDestination(
     cityPositionInList: Int = 0,
     cityId: Int,
     cityName: String,
-    country: String
+    country: String,
+    addingTime: Long
 ) : ScreenDestination() {
 
-    override val route = Screen.Details(citiesAmount, cityPositionInList, cityId, cityName, country)
+    override val route =
+        Screen.Details(citiesAmount, cityPositionInList, cityId, cityName, country, addingTime)
 }

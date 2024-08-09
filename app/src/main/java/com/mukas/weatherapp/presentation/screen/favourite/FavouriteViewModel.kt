@@ -96,7 +96,8 @@ class FavouriteViewModel(
                         cityPositionInList = _state.value.cityItems.indexOf(action.cityItem),
                         cityId = action.cityItem.city.id,
                         cityName = action.cityItem.city.name,
-                        country = action.cityItem.city.country
+                        country = action.cityItem.city.country,
+                        addingTime = action.cityItem.city.addingTime
                     )
                 )
             }

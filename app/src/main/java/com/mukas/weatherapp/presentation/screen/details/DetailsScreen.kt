@@ -66,9 +66,19 @@ fun DetailsScreen(
     cityId: Int,
     cityName: String,
     country: String,
+    addingTime: Long,
     viewModel: DetailsViewModel = koinViewModel(
         key = cityId.toString(),
-        parameters = { parametersOf(citiesAmount, cityPositionInList, cityId, cityName, country) })
+        parameters = {
+            parametersOf(
+                citiesAmount,
+                cityPositionInList,
+                cityId,
+                cityName,
+                country,
+                addingTime
+            )
+        })
 ) {
     val state by viewModel.state.collectAsState()
 

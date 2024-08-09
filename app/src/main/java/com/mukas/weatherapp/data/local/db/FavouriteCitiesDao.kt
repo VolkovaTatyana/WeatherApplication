@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface FavouriteCitiesDao {
 
-    @Query("SELECT * FROM favourite_cities")
+    @Query("SELECT * FROM favourite_cities ORDER BY adding_time")
     fun getFavouriteCities(): Flow<List<CityDbModel>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

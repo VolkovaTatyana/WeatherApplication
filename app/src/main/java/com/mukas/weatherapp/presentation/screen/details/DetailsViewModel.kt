@@ -22,6 +22,7 @@ class DetailsViewModel(
     cityId: Int,
     cityName: String,
     country: String,
+    addingTime: Long,
     private val observeFavouriteCities: ObserveFavouriteCitiesUseCase,
     private val getForecast: GetForecastUseCase,
     private val getFavouriteState: GetFavouriteStateUseCase,
@@ -29,9 +30,8 @@ class DetailsViewModel(
     private val router: Router
 ) : BaseViewModel<DetailsState>() {
 
-    //TODO addingTime
     private val city =
-        City(id = cityId, name = cityName, country = country, addingTime = cityId.toLong())
+        City(id = cityId, name = cityName, country = country, addingTime = addingTime)
 
     private lateinit var cityList: List<City>
 

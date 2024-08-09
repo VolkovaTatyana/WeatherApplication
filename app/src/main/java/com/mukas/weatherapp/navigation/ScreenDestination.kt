@@ -22,6 +22,7 @@ sealed interface Screen {
         val cityPositionInList: Int,
         val cityId: Int,
         val cityName: String,
-        val country: String
+        val country: String,
+        val addingTime: Long
     ) : Screen
 }

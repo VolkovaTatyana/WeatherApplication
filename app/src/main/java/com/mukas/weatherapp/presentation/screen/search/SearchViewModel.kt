@@ -88,7 +88,8 @@ class SearchViewModel(
                         DetailsScreenDestination(
                             cityId = action.city.id,
                             cityName = action.city.name,
-                            country = action.city.country
+                            country = action.city.country,
+                            addingTime = action.city.addingTime
                         )
                     )
                 }
