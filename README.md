@@ -1,4 +1,4 @@
-This application with the MVI Clean Architecture demonstrates using such libraries and components as Jetpack Compose, Retrofit, Room, Kotlin Coroutines, Jetpack Compose Navigation, DI Koin and others
+This application demonstrates using such libraries and components as Jetpack Compose, Retrofit, Room, Kotlin Coroutines, Jetpack Compose Navigation, DI Koin and others
 
 ## Instructions to build the project
 
