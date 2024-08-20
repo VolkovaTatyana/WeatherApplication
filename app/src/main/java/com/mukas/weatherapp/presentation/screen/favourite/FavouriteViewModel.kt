@@ -39,6 +39,7 @@ class FavouriteViewModel(
                     initLoadingState(cityItems)
                 }
         }
+        log()
     }
 
     private fun initLoadingState(cities: List<FavouriteState.CityItem>) {
