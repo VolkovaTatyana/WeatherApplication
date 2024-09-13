@@ -1,4 +1,4 @@
-This application demonstrates using such libraries and components as Jetpack Compose, Retrofit, Room, Kotlin Coroutines, Jetpack Compose Navigation, DI Koin and others
+This application demonstrates the use of libraries and components such as Jetpack Compose, Retrofit, Room, Kotlin Coroutines, Jetpack Compose Navigation, Koin for Dependency Injection, and others
 
 ## Instructions to build the project
 
